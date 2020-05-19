@@ -1,0 +1,93 @@
+@startuml
+hide circle
+
+class Vehicule{
+  immat: int
+  type: {citadine, berline, 4x4 SUV, familiale, pickup, utilitaire}
+  marque: text
+  categorie: text
+  modele: text
+  carburant: {SP, SP95, SP98, Diesel, Electrique, Ecocarburant}
+  options: {gps, ac, sport, bluemotion, easypark}
+  etat: text
+  km_parcourus: float
+  nv_carburant: float
+}
+
+class Employe{
+  id: int
+  nom: text
+  prenom: text
+  age: int
+  email: text
+  adresse: text
+}
+
+class Agent_commercial{
+  
+}
+
+class Agent_technique{
+  
+}
+
+class Client{
+  nom: text
+  prenom: text
+  adresse: text
+  age: int
+  telephone: int
+  copie_permis: text
+  
+}
+
+class Particulier{
+}
+
+class Professionnel{
+  nom_entreprise: text
+  num_id_entreprise: int
+  conducteurs: list Client
+}
+
+class Tarif{
+  
+}
+
+class Contrat_Location{
+  degats_debut_location: text
+  km_parcourus_debut_location: float
+  nv_carbutrant_debut_location: int
+  seuil_km: int
+}
+
+class Facturation{
+  payee: boolean
+  montant: float
+  date: date
+  moyen_reglement: {espece, carte crédit, carte débit, chèque}
+}
+
+class Validation{
+  
+}
+
+class Entretien{
+  
+}
+
+class Controle{
+  verification_etat()
+  verification_essence()
+}
+  
+
+Employe <-- Agent_technique
+Employe <-- Agent_commercial
+
+Client <-- Particulier
+Client <-- Professionnel
+  
+
+
+@enduml
