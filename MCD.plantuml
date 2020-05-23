@@ -3,15 +3,21 @@ hide circle
 
 class Vehicule{
   immat: int
-  type: {citadine, berline, 4x4 SUV, familiale, pickup, utilitaire}
   marque: text
-  categorie: text
+  type: {citadine, p_berline, m_berline, g_berline, 4x4 SUV, break, familiale, pickup, utilitaire}
   modele: text
+  couleur : text
   carburant: {SP, SP95, SP98, Diesel, Electrique, Ecocarburant}
   options: {gps, ac, sport, bluemotion, easypark}
   etat: text
   km_parcourus: float
   nv_carburant: float
+  anciennete : int
+}
+
+class Agence{
+  nom_agence : text
+  nb_employes : int
 }
 
 class Employe{
@@ -23,12 +29,13 @@ class Employe{
   adresse: text
 }
 
-class Agent_commercial{
-  
-}
+class Agent_commercial{}
 
-class Agent_technique{
-  
+class Agent_technique{}
+
+class Societe_reparation{
+  id_societe : int
+  nom_societe : text
 }
 
 class Client{
@@ -38,27 +45,31 @@ class Client{
   age: int
   telephone: int
   copie_permis: text
-  
+  isPermisValide() : boolean
+  isMajeur() : boolean 
 }
 
-class Particulier{
-}
+class Particulier{}
 
 class Professionnel{
   nom_entreprise: text
   num_id_entreprise: int
-  conducteurs: list Client
+  conducteurs: liste Client
 }
 
-class Tarif{
-  
+class Location{
+  moyen : {en ligne, téléphone, agence}
 }
 
-class Contrat_Location{
+class Contrat_location{
   degats_debut_location: text
   km_parcourus_debut_location: float
   nv_carbutrant_debut_location: int
   seuil_km: int
+  prix_carburant_seuil : float
+  date_debut : date
+  date_fin_prevue : date
+  calculePrixLocation() : float
 }
 
 class Facturation{
@@ -68,26 +79,58 @@ class Facturation{
   moyen_reglement: {espece, carte crédit, carte débit, chèque}
 }
 
-class Validation{
-  
-}
+class Validation_finale{}
 
 class Entretien{
-  
+  date : date
+  frequence : int
 }
 
 class Controle{
-  verification_etat()
-  verification_essence()
+  date_fin_location : date
+  degats_fin_location : text
+  km_parcourus_fin_location : float
+  nv_carburant_fin_location : float
+  is_etat_ok() : boolean 
+  is_nv_essence_ok() : boolean
+  is_seuil_depasse() : boolean
 }
-  
 
-Employe <-- Agent_technique
-Employe <-- Agent_commercial
+class Reparation{
+  nb_jours_immobilisation : int
+}
 
-Client <-- Particulier
-Client <-- Professionnel
-  
+Location "1" *-- "1" Contrat_location
+Agence "1" *-- "(2,n)" Employe
 
+
+Employe <|-- Agent_technique
+Employe <|-- Agent_commercial
+
+Client <|-- Particulier
+Client <|-- Professionnel
+
+Particulier "1" -- "1" Location : ajoute, modifie, valide
+Professionnel "1" -- "n" Location : ajoute, modifie, valide
+
+Agent_commercial "1" -- "n" Contrat_location : gère 
+Agent_commercial "1" -- "n" Facturation : édite
+Agent_commercial "1" -- "n" Validation_finale : gère
+
+Agent_technique "1" -- "n" Controle : gère
+
+Contrat_location "1" -- "1" Validation_finale : donne lieu à
+
+Vehicule "1" -- "1" Contrat_location : est associé à  
+Vehicule "1" -- "n" Entretien : est entretenu
+
+Facturation "(1, n)" -- "n" Contrat_location : est associée à
+
+Controle "1" -- "1" Contrat_location : vérifie
+Controle "1" -- "(0,1)" Reparation : donne lieu à 
+Controle "1" -- "(0,1)" Facturation : donne lieu à 
+
+Societe_reparation "n" -- "n" Entretien : réalise
+Societe_reparation "n" -- "n" Reparation : réalise
 
 @enduml
