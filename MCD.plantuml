@@ -4,7 +4,7 @@ hide circle
 class Vehicule{
   immat: int
   marque: text
-  type: {citadine, p_berline, m_berline, g_berline, 4x4 SUV, break, familiale, pickup, utilitaire}
+  categorie: {citadine|p_berline|m_berline|g_berline|4x4 SUV|break|familiale|pickup | utilitaire}
   modele: text
   couleur : text
   carburant: {SP, SP95, SP98, Diesel, Electrique, Ecocarburant}
@@ -81,7 +81,9 @@ class Facturation{
   moyen_reglement: {espece, carte crédit, carte débit}
 }
 
-class Validation_finale{}
+class Validation_finale{
+  realisee : boolean
+}
 
 class Entretien{
   date : date
@@ -104,7 +106,6 @@ class Reparation{
 Location "1" *-- "1" Contrat_location
 Agence "1" *-- "(2,n)" Employe
 
-
 Employe <|-- Agent_technique
 Employe <|-- Agent_commercial
 
@@ -125,6 +126,7 @@ Contrat_location "1" -- "1" Validation_finale : donne lieu à
 Vehicule "1" -- "n" Contrat_location : est associé à  
 Vehicule "1" -- "n" Entretien : est entretenu
 
+Facturation "1" -- "n" Reparation : est associée à
 Facturation "(1, n)" -- "n" Contrat_location : est associée à
 
 Controle "1" -- "1" Contrat_location : vérifie

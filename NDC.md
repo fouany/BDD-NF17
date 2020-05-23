@@ -18,8 +18,6 @@
 * Contrat de location : dégâts apparents en début de location, kilomètres parcourus en début de location, niveau de carburant en début de location, seuil de kilométrage, prix du carburant après le seuil, date de début du contrat, date prévue de fin du contrat
 * Validation finale : est effectuée par un agent commercial
 
-
-
 ## Liste des contraintes associées à ces objets 
 * Une agence est composée d'au moins 2 employés
 * Un employé est soit un agent commercial, soit un agent technique
@@ -44,10 +42,29 @@
 * Un particulier peut ajouter, modifier, valider une seule location et une location peut être ajoutée, modifiée, validée par plusieurs particuliers
 * Un professionnel peut ajouter, modifier, valider plusieurs locations et une location peut être ajoutée, modifiée, validée par plusieurs professionnels
 
+## Vues
+* Liste des véhicules disponibles avec toutes les attributs du véhicule
+* Bilans financiers: 
+	* Recettes produites par véhicule
+	* Recettes produites par client
+	* Recettes produites par catégorie de véhicule
+* Liste de l'ensemble des opérations (location, facture, contrôle, validation finale, procesus d'entretien) effectuées par un agent commercial ou technique
 
-## Liste des utilisateurs qui vont utiliser la base de données, leur rôle et leurs droits
-
-## Liste des fonctions que ces utilisateurs pourront effectuer
+## Liste des utilisateurs qui vont utiliser la base de données, leur rôle et leurs droits et fonctions
+* Agents commerciaux
+	* Rôles : pouvoir suivre les véhicules disponibles et en cours en location, gérer (ajouts, modifications, suppressions) les réservations
+	* Droits et fonctions: consulter la liste des véhicules disponibles, ajouter, modifier, supprimer des locations, faire le paiement  des factures
+* Agents techniques 
+	* Rôles : surveiller quels sont les véhicules disponibles, en réparation, en entretien, suivre les processus de contrôle, établir les factures de réparation
+	* Droits et fonctions : consulter la liste des véhicules disponibles, en réparation, en entretien, suivre les processus de contrôle, établir les factures de réparation
+* Clients 
+	* Rôles : effectuer des réservations en ligne, par téléphone ou en agence
+	* Droits et fonctions : ajouter, modifier, supprimer une.des location.s,  consulter sa.ses location.s en cours
 
 ## Hypothèses faites sur le sujet
-
+* Puisque les agents techniques et commerciaux n'occupent pas les mêmes fonctions, on considère qu'une agence est composée d'au moins deux employés, dont un agent technique et un commercial
+* Les agents héritent de Employe car ils ont les mêmes attributs mais pas les même fonctions
+* La catégorie, les options et l'ancienneté du véhicule font partie de l'objet Vehicule car cela simplifie le modèle et cela évite la surchage des références vers le même objet
+* L'ancienneté d'un véhicule sera un chiffre entre 0 et 9, 9 étant le plus ancien
+* Le contrat de location compose la location car leurs durées de vie sont liées
+* La validation finale a un attribut realisee pour améliorer la traçabilité du processus de fin de location
