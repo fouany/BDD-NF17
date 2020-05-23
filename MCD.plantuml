@@ -12,7 +12,8 @@ class Vehicule{
   etat: text
   km_parcourus: float
   nv_carburant: float
-  anciennete : int
+  anciennete : {0, 1, 2, ... 9}
+  freq_entretien : int
 }
 
 class Agence{
@@ -58,6 +59,7 @@ class Professionnel{
 }
 
 class Location{
+  id_location : int
   moyen : {en ligne, téléphone, agence}
 }
 
@@ -76,14 +78,13 @@ class Facturation{
   payee: boolean
   montant: float
   date: date
-  moyen_reglement: {espece, carte crédit, carte débit, chèque}
+  moyen_reglement: {espece, carte crédit, carte débit}
 }
 
 class Validation_finale{}
 
 class Entretien{
   date : date
-  frequence : int
 }
 
 class Controle{
@@ -110,8 +111,8 @@ Employe <|-- Agent_commercial
 Client <|-- Particulier
 Client <|-- Professionnel
 
-Particulier "1" -- "1" Location : ajoute, modifie, valide
-Professionnel "1" -- "n" Location : ajoute, modifie, valide
+Particulier "n" -- "1" Location : ajoute, modifie, valide
+Professionnel "n" -- "n" Location : ajoute, modifie, valide
 
 Agent_commercial "1" -- "n" Contrat_location : gère 
 Agent_commercial "1" -- "n" Facturation : édite
@@ -121,7 +122,7 @@ Agent_technique "1" -- "n" Controle : gère
 
 Contrat_location "1" -- "1" Validation_finale : donne lieu à
 
-Vehicule "1" -- "1" Contrat_location : est associé à  
+Vehicule "1" -- "n" Contrat_location : est associé à  
 Vehicule "1" -- "n" Entretien : est entretenu
 
 Facturation "(1, n)" -- "n" Contrat_location : est associée à
@@ -130,7 +131,7 @@ Controle "1" -- "1" Contrat_location : vérifie
 Controle "1" -- "(0,1)" Reparation : donne lieu à 
 Controle "1" -- "(0,1)" Facturation : donne lieu à 
 
-Societe_reparation "n" -- "n" Entretien : réalise
-Societe_reparation "n" -- "n" Reparation : réalise
+Societe_reparation "1" -- "n" Entretien : réalise
+Societe_reparation "1" -- "n" Reparation : réalise
 
 @enduml
