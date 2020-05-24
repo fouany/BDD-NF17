@@ -13,7 +13,7 @@
 * Entretien : date de réalisation de l'entretien
 * Client : nom du client, prénom, adresse, âge, téléphone, copie du permis
 * Particulier : hérite des attributs de "Client"
-* Professionnel : hérite des attributs de "Client", nom de l'entreprise, identifiant de l'entreprise, liste des conducteurs
+* Professionnel : hérite des attributs de "Client", nom de l'entreprise, identifiant de l'entreprise, liste des conducteurs (de type Client)
 * Location : identifiant de location, moyen de réalisation de la location (en ligne, téléphone, agence)
 * Contrat de location : dégâts apparents en début de location, kilomètres parcourus en début de location, niveau de carburant en début de location, seuil de kilométrage, prix du carburant après le seuil, date de début du contrat, date prévue de fin du contrat
 * Validation finale : est effectuée par un agent commercial
