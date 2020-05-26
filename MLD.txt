@@ -1,0 +1,153 @@
+Vehicule (
+	#immat : int(10),
+	marque : text NOT NULL,
+	categorie : {citadine|p_berline|m_berline|g_berline|4x4 SUV |break|familiale|pickup|utilitaire},
+	modele : text NOT NULL,
+	carburant : {SP, SP95, SP98, Diesel, Electrique, Ecocarburant},
+	options : {gps, ac, sport, bluemotion, easypark},
+	etat : text NOT NULL,
+	km_parcourus : float NOT NULL,
+	nv_carburant : float NOT NULL,
+	anciennete : {0, 1, 2, ... 9},
+	freq_entretien : int NOT NULL
+)
+
+
+Agence(
+	#id_agence : int,
+	nom_agence : text NOT NULL,
+	nb_employes : int NOT NULL
+)
+Contrainte de composition : 
+
+Employe(
+	#id_employe : int,
+	nom : text NOT NULL,
+	prenom : text NOT NULL,
+	age : int NOT NULL,
+	email : text NOT NULL,
+	adresse : text NOT NULL,
+	agence => Agence.id NOT NULL
+)
+
+Héritage par référence
+Agent_commercial(
+	#employe => Employe.id_employe NOT NULL	
+)
+
+Héritage par référence
+Agent_technique(
+	#employe => Employe.id_employe NOT NULL
+)
+
+Contraintes de l'héritage : 
+
+
+Societe_reparation(
+	#id_societe : int,
+	nom_societe : text NOT NULL
+)
+
+Héritage par classes filles pour la classe Client
+On supprime la classe Client et on met les attributs dans les classes filles
+/*Client(
+	#id_client : int,
+	nom : text NOT NULL,
+	prenom : text NOT NULL,
+	age : int NOT NULL,
+	telephone : int NOT NULL,
+	copie_permis : text NOT NULL,	
+)*/
+
+Particulier(
+	#id_client_particulier : int,
+	nom : text NOT NULL,
+	prenom : text NOT NULL,
+	age : int NOT NULL,
+	telephone : int NOT NULL,
+	copie_permis : text NOT NULL,
+)
+
+Professionnel(
+	#id_client_professionnel : int,
+	nom : text NOT NULL,
+	prenom : text NOT NULL,
+	age : int NOT NULL,
+	telephone : int NOT NULL,
+	copie_permis : text NOT NULL,	
+	num_entreprise : int NOT NULL,
+	nom_entreprise : text NOT NULL,
+	conducteurs : text NOT NULL
+)
+
+Contrainte d'héritage : 
+
+Location(
+	#id_location : int,
+	moyen : {en ligne, telephone, agence},
+	client => Particulier.id_client_particulier, Professionnel.id_client_professionnel 
+	// contrainte sur client : Particulier.id_client_particulier IS NULL OR Professionnel.id_client_professionnel IS NULL
+)
+
+Contrainte de composition : 
+
+Contrat_location(
+	#id_contrat : int,
+	km_parcourus_debut_location : float NOT NULL,
+	nv_carburant_debut_location : int NOT NULL,
+	seuil_km : int NOT NULL,
+	prix_carburant_seuil : float NOT NULL,
+	date_debut : date,
+	date_fin_prevue : date,
+	location => Location.id_location NOT NULL
+	vehicule => Vehicule.immat NOT NULL,
+	agent_commercial => Agent_commercial.employe NOT NULL
+)
+
+Facturation(
+	#id_facturation : int,
+	payee : boolean NOT NULL,
+	montant : float NOT NULL,
+	date : date,
+	moyen_reglement : {espece, credit, debit},
+	contrat_location => Contrat_location.id_contrat NOT NULL,
+	agent_commercial => Agent_commercial.employe NOT NULL
+)
+
+Validation_finale(
+	realisee : boolean NOT NULL,
+	contrat_location => Contrat_location.id_contrat NOT NULL,
+	agent_commercial => Agent_commercial.employe NOT NULL 
+)
+
+Entretien(
+	date : date,
+	vehicule => Vehicule.immat NOT NULL,
+	societe => Societe_reparation.id_societe NOT NULL
+)
+
+Controle(
+	#id_controle : int,
+	date_fin_location : date,
+	degats_fin_location : text,
+	km_parcourus_fin_location : float NOT NULL,
+	nv_carburant_fin_location : float NOT NULL,
+	contrat_location => Contrat_location.id_contrat NOT NULL,
+	agent_technique => Agent_technique.employe NOT NULL,
+)
+
+Reparation(
+	nb_jours_immobilisation : int,
+	controle => Controle.id_controle NOT NULL,
+	facturation => Facturation.id_facturation NOT NULL
+)
+
+
+
+
+Contrainte associée à categorie et carburant et ancienneté
+Contraintes de composition (agence et location)
+Vues de vérification pour les héritages et composition (employe, client)
+
+Agent techniques et commerciaux en clé étrangère
+
