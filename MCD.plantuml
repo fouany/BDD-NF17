@@ -4,7 +4,7 @@ hide circle
 class Vehicule{
   immat: int
   marque: text
-  categorie: {citadine|p_berline|m_berline|g_berline|4x4 SUV|break|familiale|pickup | utilitaire}
+  categorie: {citadine|p_berline|m_berline|g_berline|4x4 SUV|break|familiale|pickup|utilitaire}
   modele: text
   couleur : text
   carburant: {SP, SP95, SP98, Diesel, Electrique, Ecocarburant}
