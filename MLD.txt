@@ -37,13 +37,13 @@ Employe(
 
 Héritage par référence
 Agent_commercial(
-	#employe => Employe.id_employe NOT NULL	
+	#employe_commercial => Employe.id_employe NOT NULL	
 )
 
 
 Héritage par référence
 Agent_technique(
-	#employe => Employe.id_employe NOT NULL
+	#employe_technique => Employe.id_employe NOT NULL
 )
 
 Contraintes de l'héritage : (Employe.id_employe = Agent_commercial.employe) OR (Employe.id_employe = Agent_technique.employe) AND Projection(Agent_commercial.employe, Agent_technique.employe) = Projection(Employe.id_employe)
@@ -68,7 +68,7 @@ On supprime la classe Client et on met les attributs dans les classes filles
 
 
 Particulier(
-	#id_client_particulier : int,
+	#id_particulier : int,
 	nom : text NOT NULL,
 	prenom : text NOT NULL,
 	age : int NOT NULL,
@@ -78,7 +78,7 @@ Particulier(
 
 
 Professionnel(
-	#id_client_professionnel : int,
+	#id_professionnel : int,
 	nom : text NOT NULL,
 	prenom : text NOT NULL,
 	age : int NOT NULL,
