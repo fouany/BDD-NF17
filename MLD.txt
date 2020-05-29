@@ -3,7 +3,7 @@ Vehicule (
 	marque : text NOT NULL,
 	categorie : {citadine|p_berline|m_berline|g_berline|4x4 SUV |break|familiale|pickup|utilitaire},
 	modele : text NOT NULL,
-	carburant : {SP | SP95 | SP98 | Diesel | Electrique | Ecocarburant},
+	carburant : {SP95 | SP98 | Diesel | Electrique | Ecocarburant},
 	options : {gps, ac, sport, bluemotion, easypark},
 	etat : text NOT NULL,
 	km_parcourus : float NOT NULL,
