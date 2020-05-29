@@ -9,7 +9,7 @@ Vehicule (
 	km_parcourus : float NOT NULL,
 	nv_carburant : float NOT NULL,
 	anciennete : {0 | 1 | 2 | ... | 9},
-	freq_entretien : int NOT NULL
+	freq_entretien : float NOT NULL
 )
 
 Contraintes : 
