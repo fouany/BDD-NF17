@@ -103,7 +103,6 @@ class Reparation{
   nb_jours_immobilisation : int
 }
 
-Location "1" *-- "1" Contrat_location
 Agence "1" *-- "(2,n)" Employe
 
 Employe <|-- Agent_technique
@@ -113,6 +112,7 @@ Client <|-- Particulier
 Client <|-- Professionnel
 
 Particulier "n" -- "1" Location : ajoute, modifie, valide
+
 Professionnel "n" -- "n" Location : ajoute, modifie, valide
 
 Agent_commercial "1" -- "n" Contrat_location : gère 
@@ -122,6 +122,7 @@ Agent_commercial "1" -- "n" Validation_finale : gère
 Agent_technique "1" -- "n" Controle : gère
 
 Contrat_location "1" -- "1" Validation_finale : donne lieu à
+Contrat_location "1" -- "1" Location
 
 Vehicule "1" -- "n" Contrat_location : est associé à  
 Vehicule "1" -- "n" Entretien : est entretenu
