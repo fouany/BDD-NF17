@@ -18,8 +18,7 @@ options : "," autorise une quelconque combinaison des options avec Taille(combin
 
 
 Agence(
-	#id_agence : int,
-	nom_agence : text NOT NULL,
+	#nom_agence : text NOT NULL,
 	nb_employes : int NOT NULL
 )
 Contrainte de composition : nb_emploes >= 2
