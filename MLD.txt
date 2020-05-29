@@ -3,14 +3,19 @@ Vehicule (
 	marque : text NOT NULL,
 	categorie : {citadine|p_berline|m_berline|g_berline|4x4 SUV |break|familiale|pickup|utilitaire},
 	modele : text NOT NULL,
-	carburant : {SP, SP95, SP98, Diesel, Electrique, Ecocarburant},
+	carburant : {SP | SP95 | SP98 | Diesel | Electrique | Ecocarburant},
 	options : {gps, ac, sport, bluemotion, easypark},
 	etat : text NOT NULL,
 	km_parcourus : float NOT NULL,
 	nv_carburant : float NOT NULL,
-	anciennete : {0, 1, 2, ... 9},
+	anciennete : {0 | 1 | 2 | ... | 9},
 	freq_entretien : int NOT NULL
 )
+
+Contraintes : 
+categorie, carburant, anciennete : "|" est le "ou" exclusif
+options : "," autorise une quelconque combinaison des options avec Taille(combinaison <= 5)
+
 
 
 Agence(
@@ -18,7 +23,7 @@ Agence(
 	nom_agence : text NOT NULL,
 	nb_employes : int NOT NULL
 )
-Contrainte de composition : 
+Contrainte de composition : nb_emploes >= 2
 
 Employe(
 	#id_employe : int,
@@ -40,7 +45,7 @@ Agent_technique(
 	#employe => Employe.id_employe NOT NULL
 )
 
-Contraintes de l'héritage : 
+Contraintes de l'héritage : (Employe.id_employe = Agent_commercial.employe) OR (Employe.id_employe = Agent_technique.employe) AND Projection(Agent_commercial.employe, Agent_technique.employe) = Projection(Employe.id_employe)
 
 
 Societe_reparation(
@@ -80,16 +85,12 @@ Professionnel(
 	conducteurs : text NOT NULL
 )
 
-Contrainte d'héritage : 
-
 Location(
 	#id_location : int,
 	moyen : {en ligne, telephone, agence},
 	client => Particulier.id_client_particulier, Professionnel.id_client_professionnel 
 	// contrainte sur client : Particulier.id_client_particulier IS NULL OR Professionnel.id_client_professionnel IS NULL
 )
-
-Contrainte de composition : 
 
 Contrat_location(
 	#id_contrat : int,
@@ -121,6 +122,7 @@ Validation_finale(
 )
 
 Entretien(
+    #id_entretien : int,
 	date : date,
 	vehicule => Vehicule.immat NOT NULL,
 	societe => Societe_reparation.id_societe NOT NULL
@@ -143,11 +145,5 @@ Reparation(
 )
 
 
-
-
-Contrainte associée à categorie et carburant et ancienneté
-Contraintes de composition (agence et location)
+Contraintes de composition (agence)
 Vues de vérification pour les héritages et composition (employe, client)
-
-Agent techniques et commerciaux en clé étrangère
-
