@@ -19,8 +19,8 @@
 * Validation finale : est effectuée par un agent commercial
 
 ## Liste des contraintes associées à ces objets 
-* Une agence est composée d'au moins 2 employés
-* Un employé est soit un agent commercial, soit un agent technique
+* Une agence est composée d'au moins 2 employés : Se traduit par une relation de composition car la durée de vie de l'agence dépend du nombre d'employés
+* Un employé est soit un agent commercial, soit un agent technique : Se traduit par une un héritage par classe référence depuis les classes filles vers la classe mère Employe car les filles ont les mêmes attributs mais des actions différentes
 * Un agent technique gère le processus de contrôle (incluant l'entretien) mais un contrôle n'est lié qu'à un agent technique
 * Une location est composée d'un contrat de location et un cont
 *  Agent commercial :
@@ -38,7 +38,7 @@
 * Une société de réparation peut effectuer plusieurs réparations et plusieurs entretiens
 * Une réparation est effectuée par une seule société de réparation
 * Un entretien est effectué par une seule société de réparation et concerne un unique véhicule
-* Un client est soit un particulier, soit un professionnel
+* Un client est soit un particulier, soit un professionnel : Se traduit par un héritage par les classes filles particulier et professionnel pour pouvoir différencier les actions que les filles peuvent faire
 * Un particulier peut ajouter, modifier, valider une seule location et une location peut être ajoutée, modifiée, validée par plusieurs particuliers
 * Un professionnel peut ajouter, modifier, valider plusieurs locations et une location peut être ajoutée, modifiée, validée par plusieurs professionnels
 
