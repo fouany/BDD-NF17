@@ -1,26 +1,26 @@
 # Note De Clarification
 
 ## Liste des objets présents dans la base et leur propriétés
-* Agence : nom de l'agence, nombre d'employés
-* Employe : identifiant de l'employé, nom, prénom, âge, email, adresse
-* Agent technique : hérite des attributs de "Employe"
-* Agent commercial : hérite des attributs de "Employe"
-* Controle : date de fin de location, degats de fin de location, kilomètres parcourus en fin de location, niveau de carburant en fin de location
-* Facturation : payee ou non payee, montant, date, moyen de règlement (espèce, carte de crédit, carte de débit)
-* Societe de réparation : identifiant de la société, nom de la société
+* Agence : identifiant (clé primaire) nom de l'agence, nombre d'employés
+* Employe : identifiant de l'employé (clé primaire), nom, prénom, âge, email, adresse
+* Agent technique : hérite des attributs de "Employe", référence à l'identifiant d'employé (clé primaire)
+* Agent commercial : hérite des attributs de "Employe"référence à l'identifiant d'employé (clé primaire)
+* Controle : identifiant du contrôle (clé primaire), date de fin de location, degats de fin de location, kilomètres parcourus en fin de location, niveau de carburant en fin de location
+* Facturation : identifiant de facturation (clé primaire), payee ou non payee, montant, date, moyen de règlement (espèce, carte de crédit, carte de débit), clé étrangère vers le contrat de location, clé étrangère vers l'agent commecial qui s'en occupe
+* Societe de réparation : identifiant de la société (clé primaire), nom de la société
 * Reparation : nombre de jours d'immobilisation du véhicule
-* Vehicule : numéro d'immatriculation, marque, type (citadine, p_berline, m_berline, g_berline, 4x4 SUV, break, familiale, pickup, utilitaire), modèle, carburant (SP, SP95, SP98, Diesel, Electrique, Ecocarburant), options (gps, ac, sport, bluemotion, easypark), état, kilomètres parcourus, niveau du carburant, indice d'anncienneté (entre 0 et 9), fréquence d'entretien en semaines
-* Entretien : date de réalisation de l'entretien
-* Client : nom du client, prénom, adresse, âge, téléphone, copie du permis
+* Vehicule : numéro d'immatriculation (clé primaire), marque, type (citadine, p_berline, m_berline, g_berline, 4x4 SUV, break, familiale, pickup, utilitaire), modèle, carburant (SP, SP95, SP98, Diesel, Electrique, Ecocarburant), options (gps, ac, sport, bluemotion, easypark), état, kilomètres parcourus, niveau du carburant, indice d'anncienneté (entre 0 et 9), fréquence d'entretien en semaines
+* Entretien : identifiant de l'entretien (clé primaire), date de réalisation de l'entretien, clé étrangère vers le véhicule, clé étrangère vers la société de réparation, clé étrangère vers le contrat de location, clé étrangère vers l'agent technique associé
+* Client : identifiant du client (clé primaire), nom du client, prénom, adresse, âge, téléphone, copie du permis
 * Particulier : hérite des attributs de "Client"
 * Professionnel : hérite des attributs de "Client", nom de l'entreprise, identifiant de l'entreprise, liste des conducteurs (de type Client)
-* Location : identifiant de location, moyen de réalisation de la location (en ligne, téléphone, agence)
-* Contrat de location : dégâts apparents en début de location, kilomètres parcourus en début de location, niveau de carburant en début de location, seuil de kilométrage, prix du carburant après le seuil, date de début du contrat, date prévue de fin du contrat
+* Location : identifiant de location (clé primaire), moyen de réalisation de la location (en ligne, téléphone, agence), clé étrangère au client particulier ou professionnel qui a fait la location
+* Contrat de location : identifiant de la location (clé primaire), dégâts apparents en début de location, kilomètres parcourus en début de location, niveau de carburant en début de location, seuil de kilométrage, prix du carburant après le seuil, date de début du contrat, date prévue de fin du contrat, clé étrangère vers la location, clé étrangère vers le véhicule, clé étrangère vers l'agent commercial
 * Validation finale : est effectuée par un agent commercial
 
 ## Liste des contraintes associées à ces objets 
-* Une agence est composée d'au moins 2 employés
-* Un employé est soit un agent commercial, soit un agent technique
+* Une agence est composée d'au moins 2 employés : Se traduit par une relation de composition car la durée de vie de l'agence dépend du nombre d'employés
+* Un employé est soit un agent commercial, soit un agent technique : Se traduit par une un héritage par classe référence depuis les classes filles vers la classe mère Employe car les filles ont les mêmes attributs mais des actions différentes
 * Un agent technique gère le processus de contrôle (incluant l'entretien) mais un contrôle n'est lié qu'à un agent technique
 * Une location est composée d'un contrat de location et un cont
 *  Agent commercial :
@@ -38,17 +38,17 @@
 * Une société de réparation peut effectuer plusieurs réparations et plusieurs entretiens
 * Une réparation est effectuée par une seule société de réparation
 * Un entretien est effectué par une seule société de réparation et concerne un unique véhicule
-* Un client est soit un particulier, soit un professionnel
+* Un client est soit un particulier, soit un professionnel : Se traduit par un héritage par les classes filles particulier et professionnel pour pouvoir différencier les actions que les filles peuvent faire
 * Un particulier peut ajouter, modifier, valider une seule location et une location peut être ajoutée, modifiée, validée par plusieurs particuliers
 * Un professionnel peut ajouter, modifier, valider plusieurs locations et une location peut être ajoutée, modifiée, validée par plusieurs professionnels
 
 ## Vues
-* Liste des véhicules disponibles avec toutes les attributs du véhicule
+* Liste des véhicules disponibles avec toutes les attributs du véhicule : Requêtes sur la table véhicule et contrat de location
 * Bilans financiers: 
-	* Recettes produites par véhicule
-	* Recettes produites par client
-	* Recettes produites par catégorie de véhicule
-* Liste de l'ensemble des opérations (location, facture, contrôle, validation finale, procesus d'entretien) effectuées par un agent commercial ou technique
+	* Recettes produites par véhicule : Requêtes sur la table véhicule, contrat de location et entretien
+	* Recettes produites par client : Requêtes sur les tables client particuliers (ou client professionnel) et facturation
+	* Recettes produites par catégorie de véhicule : Requêtes sur la table véhicule, contrat de location, entretien
+* Liste de l'ensemble des opérations (location, facture, contrôle, validation finale, procesus d'entretien) effectuées par un agent commercial ou technique : Requêtes sur la table agent commercial (ou agent technique), contrat de location, facturation, controle, entretien
 
 ## Liste des utilisateurs qui vont utiliser la base de données, leur rôle et leurs droits et fonctions
 * Agents commerciaux
