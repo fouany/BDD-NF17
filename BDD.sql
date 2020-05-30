@@ -20,7 +20,7 @@ CREATE TABLE Vehicule(
 	categorie VARCHAR CHECK (categorie IN ('citadine','p_berline','m_berline','g_berline','4x4 SUV','break','familiale','pickup','utilitaire')) NOT NULL,
 	modele VARCHAR(30) NOT NULL,
 	carburant VARCHAR CHECK (carburant IN ('SP95', 'SP98', 'Diesel', 'Electrique', 'Ecocarburant')) NOT NULL,
-	options VARCHAR CHECK (options IN ('gps','ac', 'sport', 'bluemotion', 'easypark')) NOT NULL,
+	options VARCHAR CHECK (options IN ('gps', 'ac', 'sport', 'bluemotion', 'easypark')) NOT NULL,
 	etat VARCHAR(200) NOT NULL, -- L'état doit être qualifié par au moins un adjectif
 	km_parcourus DECIMAL NOT NULL,
 	nv_carburant DECIMAL NOT NULL,
@@ -29,9 +29,16 @@ CREATE TABLE Vehicule(
 );
 
 CREATE TABLE Agence(	
-	nom_agence VARCHAR(30) PRIMARY KEY, -- Le nom de l'agence étant unique, on peut le considérer comme clé primaire
-	nb_employe NUMERIC CHECK (nb_employe >= 2) NOT NULL
+    id_agence NUMERIC PRIMARY KEY,
+	nom_agence VARCHAR(30) UNIQUE NOT NULL
+	--nb_employe NUMERIC CHECK (nb_employe >= 2) NOT NULL
 );
+
+-- Vérifier qu'une agence a bien au moins 2 employes
+--CREATE VIEW Nb_employes(agence) AS
+--SELECT COUNT(E.id_employe) 
+--FROM Employe E, Agence A
+--WHERE E.agence = A.id_agence;
 
 CREATE TABLE Employe(
 	id_employe NUMERIC PRIMARY KEY,
@@ -40,18 +47,19 @@ CREATE TABLE Employe(
 	age NUMERIC NOT NULL,
 	email VARCHAR(30) UNIQUE NOT NULL, -- Toutes les adresses email doivent être distinctes
 	adresse VARCHAR(100) NOT NULL,
-	agence VARCHAR(30) NOT NULL,
-	FOREIGN KEY (agence) REFERENCES Agence(nom_agence)
+	agence NUMERIC NOT NULL,
+	FOREIGN KEY (agence) REFERENCES Agence(id_agence),
+	-- CHECK id_employe
 );
 
 CREATE TABLE Agent_commercial(
 	employe_commercial NUMERIC PRIMARY KEY,
-	FOREIGN KEY (employe_commercial) REFERENCES Employe(id_employe) -- AJOUTER CHECK
+	FOREIGN KEY (employe_commercial) REFERENCES Employe(id_employe)
 );
 
 CREATE TABLE Agent_technique(
 	employe_technique NUMERIC PRIMARY KEY,
-	FOREIGN KEY (employe_technique) REFERENCES Employe(id_employe) -- AJOUTER CHECK
+	FOREIGN KEY (employe_technique) REFERENCES Employe(id_employe)
 );
 
 CREATE TABLE Societe_reparation(
@@ -100,7 +108,7 @@ CREATE TABLE Contrat_location(
 	agent_commercial NUMERIC NOT NULL,
 	FOREIGN KEY (location) REFERENCES Location(id_location),
 	FOREIGN KEY (vehicule) REFERENCES Vehicule(immat),
-	FOREIGN KEY (agent_commercial) REFERENCES Agent_commercial(employe_commercial) -- Contrainte?
+	FOREIGN KEY (agent_commercial) REFERENCES Agent_commercial(employe_commercial)
 );
 
 CREATE TABLE Facturation(
@@ -112,7 +120,7 @@ CREATE TABLE Facturation(
 	contrat_location NUMERIC NOT NULL,
 	agent_commercial NUMERIC NOT NULL,
 	FOREIGN KEY (contrat_location) REFERENCES Contrat_location(id_contrat),
-	FOREIGN KEY (agent_commercial) REFERENCES Agent_commercial(employe_commercial) --Contrainte?
+	FOREIGN KEY (agent_commercial) REFERENCES Agent_commercial(employe_commercial)
 );
 
 CREATE TABLE Validation_finale(
@@ -120,7 +128,7 @@ CREATE TABLE Validation_finale(
     contrat_location NUMERIC NOT NULL,
     agent_commercial NUMERIC NOT NULL,
     FOREIGN KEY (contrat_location) REFERENCES Contrat_location(id_contrat),
-	FOREIGN KEY (agent_commercial) REFERENCES Agent_commercial(employe_commercial) --Contrainte?
+	FOREIGN KEY (agent_commercial) REFERENCES Agent_commercial(employe_commercial)
 );
 
 CREATE TABLE Entretien(
