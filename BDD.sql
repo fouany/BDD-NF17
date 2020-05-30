@@ -14,7 +14,6 @@ DROP TABLE IF EXISTS Entretien CASCADE;
 DROP TABLE IF EXISTS Controle CASCADE;
 DROP TABLE IF EXISTS Reparation CASCADE;
 
-
 CREATE TABLE Vehicule(	
 	immat NUMERIC PRIMARY KEY,
 	marque VARCHAR(30) NOT NULL,
@@ -101,7 +100,56 @@ CREATE TABLE Contrat_location(
 	agent_commercial NUMERIC NOT NULL,
 	FOREIGN KEY (location) REFERENCES Location(id_location),
 	FOREIGN KEY (vehicule) REFERENCES Vehicule(immat),
-	FOREIGN KEY (agent_commercial) REFERENCES Agent_commercial(employe_commercial)
+	FOREIGN KEY (agent_commercial) REFERENCES Agent_commercial(employe_commercial) -- Contrainte?
+);
+
+CREATE TABLE Facturation(
+	id_facturation NUMERIC PRIMARY KEY,
+	payee BOOLEAN NOT NULL,
+	montant DECIMAL NOT NULL,
+	date DATE,
+	moyen_reglement VARCHAR CHECK (moyen_reglement IN ('espece', 'credit', 'debit')) NOT NULL,
+	contrat_location NUMERIC NOT NULL,
+	agent_commercial NUMERIC NOT NULL,
+	FOREIGN KEY (contrat_location) REFERENCES Contrat_location(id_contrat),
+	FOREIGN KEY (agent_commercial) REFERENCES Agent_commercial(employe_commercial) --Contrainte?
+);
+
+CREATE TABLE Validation_finale(
+    realisee BOOLEAN NOT NULL,
+    contrat_location NUMERIC NOT NULL,
+    agent_commercial NUMERIC NOT NULL,
+    FOREIGN KEY (contrat_location) REFERENCES Contrat_location(id_contrat),
+	FOREIGN KEY (agent_commercial) REFERENCES Agent_commercial(employe_commercial) --Contrainte?
+);
+
+CREATE TABLE Entretien(
+    id_entretien NUMERIC PRIMARY KEY,
+    date DATE,
+    vehicule NUMERIC NOT NULL,
+    societe_reparation NUMERIC NOT NULL,
+    FOREIGN KEY (vehicule) REFERENCES Vehicule(immat),
+    FOREIGN KEY (societe_reparation) REFERENCES Societe_reparation(id_societe)
+);
+
+CREATE TABLE Controle(
+    id_controle NUMERIC PRIMARY KEY,
+    date_fin_location DATE,
+    degats_fin_location VARCHAR(200) NOT NULL,
+    km_parcourus_fin_location DECIMAL NOT NULL,
+    nv_carburant_fin_location DECIMAL NOT NULL,
+    contrat_location NUMERIC NOT NULL,
+    agent_technique NUMERIC NOT NULL,
+    FOREIGN KEY (contrat_location) REFERENCES Contrat_location(id_contrat),
+    FOREIGN KEY (agent_technique) REFERENCES Agent_technique(employe_technique)
+);
+
+CREATE TABLE Reparation(
+    nb_jours_immobilisation NUMERIC NOT NULL,
+    controle NUMERIC NOT NULL,
+    facturation NUMERIC NOT NULL,
+    FOREIGN KEY (controle) REFERENCES Controle(id_controle),
+    FOREIGN KEY (facturation) REFERENCES Facturation(id_facturation)
 );
 
 
