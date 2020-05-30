@@ -134,7 +134,7 @@ Entretien(
     #id_entretien : int,
 	date : date,
 	vehicule => Vehicule.immat NOT NULL,
-	societe => Societe_reparation.id_societe NOT NULL
+	societe_reparation => Societe_reparation.id_societe NOT NULL
 )
 
 
