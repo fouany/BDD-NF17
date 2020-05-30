@@ -14,6 +14,8 @@ DROP TABLE IF EXISTS Entretien CASCADE;
 DROP TABLE IF EXISTS Controle CASCADE;
 DROP TABLE IF EXISTS Reparation CASCADE;
 
+-- Créations des tables
+
 CREATE TABLE Vehicule(	
 	immat NUMERIC PRIMARY KEY,
 	marque VARCHAR(30) NOT NULL,
@@ -160,5 +162,12 @@ CREATE TABLE Reparation(
     FOREIGN KEY (facturation) REFERENCES Facturation(id_facturation)
 );
 
-
 --SQL contraintes de cardinalité pas exprimées
+
+
+
+-- Insertions des données
+--INSERT INTO Vehicule VALUES (0123456789, 'Peugeot', 'citadine', '206', 'SP95', 'gps',  )
+--Changer options vehicule dans table supplémentaire?
+INSERT INTO Agence VALUES()
+
