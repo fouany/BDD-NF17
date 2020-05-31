@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS Vehicule CASCADE;
+DROP TABLE IF EXISTS Options CASCADE;
 DROP TABLE IF EXISTS Agence CASCADE;
 DROP TABLE IF EXISTS Employe CASCADE;
 DROP TABLE IF EXISTS Agent_commercial CASCADE;
@@ -22,7 +23,6 @@ CREATE TABLE Vehicule(
 	categorie VARCHAR CHECK (categorie IN ('citadine','p_berline','m_berline','g_berline','4x4 SUV','break','familiale','pickup','utilitaire')) NOT NULL,
 	modele VARCHAR(30) NOT NULL,
 	carburant VARCHAR CHECK (carburant IN ('SP95', 'SP98', 'Diesel', 'Electrique', 'Ecocarburant')) NOT NULL,
-	options VARCHAR CHECK (options IN ('gps', 'ac', 'sport', 'bluemotion', 'easypark')) NOT NULL,
 	etat VARCHAR(200) NOT NULL, -- L'état doit être qualifié par au moins un adjectif
 	km_parcourus DECIMAL NOT NULL,
 	nv_carburant DECIMAL NOT NULL,
@@ -30,17 +30,20 @@ CREATE TABLE Vehicule(
 	freq_entretien NUMERIC NOT NULL -- Fréquence d'entretien en mois
 );
 
+CREATE TABLE Options(
+    id_vehicule NUMERIC NOT NULL,
+    gps BOOLEAN NOT NULL,
+    ac BOOLEAN NOT NULL,
+    sport BOOLEAN NOT NULL,
+    bluemotion BOOLEAN NOT NULL,
+    easypark BOOLEAN NOT NULL,
+    FOREIGN KEY (id_vehicule) REFERENCES Vehicule(immat)
+);
+
 CREATE TABLE Agence(	
     id_agence NUMERIC PRIMARY KEY,
 	nom_agence VARCHAR(30) UNIQUE NOT NULL
-	--nb_employe NUMERIC CHECK (nb_employe >= 2) NOT NULL
 );
-
--- Vérifier qu'une agence a bien au moins 2 employes
---CREATE VIEW Nb_employes(agence) AS
---SELECT COUNT(E.id_employe) 
---FROM Employe E, Agence A
---WHERE E.agence = A.id_agence;
 
 CREATE TABLE Employe(
 	id_employe NUMERIC PRIMARY KEY,
@@ -50,8 +53,7 @@ CREATE TABLE Employe(
 	email VARCHAR(30) UNIQUE NOT NULL, -- Toutes les adresses email doivent être distinctes
 	adresse VARCHAR(100) NOT NULL,
 	agence NUMERIC NOT NULL,
-	FOREIGN KEY (agence) REFERENCES Agence(id_agence),
-	-- CHECK id_employe
+	FOREIGN KEY (agence) REFERENCES Agence(id_agence)
 );
 
 CREATE TABLE Agent_commercial(
@@ -93,8 +95,12 @@ CREATE TABLE Professionnel(
 CREATE TABLE Location(
 	id_location NUMERIC PRIMARY KEY,
 	moyen VARCHAR CHECK (moyen IN ('en ligne', 'telephone', 'agence')) NOT NULL,
-	client NUMERIC NOT NULL
-	-- FOREIGN KEY client REFERENCES Particulier(id_particulier) ??!!
+	client_particulier NUMERIC,
+	client_professionnel NUMERIC, 
+	FOREIGN KEY (client_particulier) REFERENCES Particulier(id_particulier),
+	FOREIGN KEY (client_professionnel) REFERENCES Professionnel(id_professionnel),
+	CHECK (	(client_particulier IS NOT NULL AND client_professionnel IS NULL) OR 
+	        (client_particulier IS NULL AND client_professionnel IS NOT NULL)) -- La location est faite par un particulier ou un professionnel
 );
 
 CREATE TABLE Contrat_location(
@@ -165,9 +171,28 @@ CREATE TABLE Reparation(
 --SQL contraintes de cardinalité pas exprimées
 
 
-
 -- Insertions des données
---INSERT INTO Vehicule VALUES (0123456789, 'Peugeot', 'citadine', '206', 'SP95', 'gps',  )
---Changer options vehicule dans table supplémentaire?
-INSERT INTO Agence VALUES()
 
+--INSERT INTO Vehicule VALUES (0123456789, 'Peugeot', 'citadine', '206', 'SP95', ,  )
+
+--INSERT INTO Options VALUES()
+
+-- Vues de vérification des contraintes
+
+-- Vue à destination des administrateurs afin de vérifier qu'une agence a bien au moins 2 employés
+--CREATE VIEW check_nb_employes(agence) AS
+--SELECT COUNT(E.id_employe) 
+--FROM Employe E, Agence A
+--WHERE E.agence = A.id_agence;
+
+-- Si le nombre d'agents commerciaux et techniques est égal au nombre d'employes et qu'il n'y a pas de doublon, alors les contraintes sont vérifiées
+--CREATE VIEW check_id_employe() AS
+--SELECT COUNT(E.id_employe) AS Nb_employes
+--FROM Employe E, Agent_commercial ac, Agent_technique at
+--WHERE (E.id_employe = ac.employe_commercial) OR (E.id_employe = at.employe_technique)
+--UNION
+--SELECT COUNT(ac.employe_commercial) AS Nb_employes_commerciaux
+--FROM Agent_commercial ac;
+--UNION
+--SELECT COUNT(at.employe_technique) AS Nb_employes_techniques
+--FROM Agent_technique at;
