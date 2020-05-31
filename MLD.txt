@@ -152,7 +152,8 @@ Controle(
 
 
 Reparation(
-	nb_jours_immobilisation : int,
-	controle => Controle.id_controle NOT NULL,
+    controle => Controle.id_controle NOT NULL,
 	facturation => Facturation.id_facturation NOT NULL
+	nb_jours_immobilisation : int
+	
 )
