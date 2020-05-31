@@ -25,7 +25,7 @@ CREATE TABLE Vehicule(
 	carburant VARCHAR CHECK (carburant IN ('SP95', 'SP98', 'Diesel', 'Electrique', 'Ecocarburant')) NOT NULL,
 	etat VARCHAR(200) NOT NULL, -- L'état doit être qualifié par au moins un adjectif
 	km_parcourus DECIMAL NOT NULL,
-	nv_carburant DECIMAL NOT NULL,
+	nv_carburant INT NOT NULL, -- Niveau en pourcentage
 	anciennete NUMERIC CHECK (anciennete >= 0 AND anciennete <= 9) NOT NULL,
 	freq_entretien NUMERIC NOT NULL -- Fréquence d'entretien en mois
 );
@@ -42,7 +42,8 @@ CREATE TABLE Options(
 
 CREATE TABLE Agence(	
     id_agence NUMERIC PRIMARY KEY,
-	nom_agence VARCHAR(30) UNIQUE NOT NULL
+	nom_agence VARCHAR(30) UNIQUE NOT NULL,
+	adress VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE Employe(
@@ -68,7 +69,8 @@ CREATE TABLE Agent_technique(
 
 CREATE TABLE Societe_reparation(
 	id_societe NUMERIC PRIMARY KEY,
-	nom_societe VARCHAR(30) UNIQUE NOT NULL
+	nom_societe VARCHAR(30) UNIQUE NOT NULL,
+	adresse VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE Particulier(
@@ -105,14 +107,14 @@ CREATE TABLE Location(
 
 CREATE TABLE Contrat_location(
 	id_contrat NUMERIC PRIMARY KEY,
+	location NUMERIC NOT NULL,
+	vehicule NUMERIC NOT NULL,
 	km_parcourus_debut_location DECIMAL NOT NULL,
-	nv_carburant_debut_lcoation NUMERIC NOT NULL,
+	nv_carburant_debut_location NUMERIC NOT NULL,
 	seuil_km NUMERIC NOT NULL,
 	prix_carburant_seuil DECIMAL NOT NULL,
 	date_debut DATE,
 	date_fin_prevue DATE,
-	location NUMERIC NOT NULL,
-	vehicule NUMERIC NOT NULL,
 	agent_commercial NUMERIC NOT NULL,
 	FOREIGN KEY (location) REFERENCES Location(id_location),
 	FOREIGN KEY (vehicule) REFERENCES Vehicule(immat),
@@ -161,9 +163,9 @@ CREATE TABLE Controle(
 );
 
 CREATE TABLE Reparation(
-    nb_jours_immobilisation NUMERIC NOT NULL,
     controle NUMERIC NOT NULL,
     facturation NUMERIC NOT NULL,
+    nb_jours_immobilisation NUMERIC NOT NULL,
     FOREIGN KEY (controle) REFERENCES Controle(id_controle),
     FOREIGN KEY (facturation) REFERENCES Facturation(id_facturation)
 );
@@ -173,9 +175,83 @@ CREATE TABLE Reparation(
 
 -- Insertions des données
 
---INSERT INTO Vehicule VALUES (0123456789, 'Peugeot', 'citadine', '206', 'SP95', ,  )
+INSERT INTO Vehicule VALUES (0, 'Peugeot', 'citadine', '206', 'SP95', 'Bon état', 10000, '50', '0', '12');
+INSERT INTO Vehicule VALUES (1, 'Renault', '4x4 SUV', 'Kadjar', 'SP98', 'Mauvais état', 20000, '60', '5', '6');
+INSERT INTO Vehicule VALUES (2, 'Citroen', 'citadine', 'C3', 'SP95', 'Bon état', 30000, '100', '3', '12');
+INSERT INTO Vehicule VALUES (3, 'Mercedes-Benz', 'citadine', 'Classe A', 'Ecocarburant', 'Bon état', 40000, '80', '2', '12');
+INSERT INTO Vehicule VALUES (4, 'Audi', 'familiale', 'A6', 'SP95', 'Bon état', 50000, '90', '3', '24');
+INSERT INTO Vehicule VALUES (5, 'Tesla', 'familiale', 'Tesla-3', 'Electrique', 'Bon état', 1000, '100', '4', '18');
 
---INSERT INTO Options VALUES()
+INSERT INTO Options VALUES (0, true, true, false, false, false);
+INSERT INTO Options VALUES (1, true, true, false, false, false);
+INSERT INTO Options VALUES (2, true, false, false, false, false);
+INSERT INTO Options VALUES (3, true, true, false, true, true);
+INSERT INTO Options VALUES (4, true, true, true, true, false);
+INSERT INTO Options VALUES (5, true, true, true, true, true);
+
+INSERT INTO Agence VALUES (0, 'EasyRental', '150 rue Boileau 69006 Lyon');
+
+INSERT INTO Employe VALUES (0, 'Dupont', 'Michel', 45, 'michel.dupont@easyrental.com', '1 rue du Bois 69001 Lyon', 0);
+INSERT INTO Employe VALUES (1, 'Dupond', 'Thibault', 50, 'thibault.dupond@easyrental.com', '3 rue de la Charité 69002 Lyon', 0);
+INSERT INTO Employe VALUES (2, 'Dupons', 'Grégoire', 40, 'gregoire.dupons@easyrental.com', '5 rue Auguste-Comte 69002 Lyon', 0);
+INSERT INTO Employe VALUES (3, 'Martin', 'Antoine', 45, 'antoine.martin@easyrental.com', '7 rue Juliette Récamier 69001 Lyon', 0);
+INSERT INTO Employe VALUES (4, 'Durand', 'Isabelle', 35, 'isabelle.durand@easyrental.com', '9 rue Jean Moulin 69003 Lyon', 0);
+INSERT INTO Employe VALUES (5, 'Dubois', 'Sophie', 45, 'sophie.duboist@easyrental.com', '11 rue Sainte-Hélène 69005 Lyon', 0);
+
+INSERT INTO Agent_commercial VALUES (0);
+INSERT INTO Agent_commercial VALUES (1);
+INSERT INTO Agent_commercial VALUES (2);
+
+INSERT INTO Agent_technique VALUES (3);
+INSERT INTO Agent_technique VALUES (4);
+INSERT INTO Agent_technique VALUES (5);
+
+INSERT INTO Societe_reparation VALUES (0, 'EasyRepair', '200 rue Ney 69006 Lyon');
+
+INSERT INTO Particulier VALUES (0, 'Alice', 'Martin', 27, 0123456789, 'Permis B valide, Année obtention : 2010');
+INSERT INTO Particulier VALUES (1, 'Pauline', 'Petit', 40, 1234567890, 'Permis B valide, Année obtention : 2000');
+INSERT INTO Particulier VALUES (2, 'Stephane', 'Grand', 50, 2345678901, 'Permis B valide, Année obtention : 2005');
+
+INSERT INTO Professionnel VALUES (0, 'Bernard', 'Bole', 50, 3456789012, 'Permis B valide, Année obtention : 1990', '123456789', 'Entreprise1', 'Bole, Herkens');
+INSERT INTO Professionnel VALUES (1, 'Bertand', 'Zabiaux', 35, 4567890123, 'Permis B valide, Année obtention : 2001', '9876543210', 'Entreprise2', 'Zabiaux, Chapuis, Gillet');
+INSERT INTO Professionnel VALUES (2, 'Benedicte', 'Latour', 40, 5678901234, 'Permis B valide, Année obtention : 1996', '8765432109', 'Entreprise3', 'Latour');
+
+INSERT INTO Location VALUES (0, 'en ligne', 0, NULL);
+INSERT INTO Location VALUES (1, 'agence', 1, NULL);
+INSERT INTO Location VALUES (2, 'en ligne', 2, NULL);
+INSERT INTO Location VALUES (3, 'telephone', NULL, 0);
+INSERT INTO Location VALUES (4, 'en ligne', NULL, 1);
+INSERT INTO Location VALUES (5, 'en ligne', NULL, 2);
+
+INSERT INTO Contrat_location VALUES (0, 0, 0, 10000, 50, 500, 1.623, TO_DATE('20200110','YYYYMMDD'), TO_DATE('20200120','YYYYMMDD'), 0);
+INSERT INTO Contrat_location VALUES (1, 1, 1, 20000, 60, 500, 1.624, TO_DATE('20200111','YYYYMMDD'), TO_DATE('20200120','YYYYMMDD'), 0);
+INSERT INTO Contrat_location VALUES (2, 2, 2, 30000, 100, 1000, 1.625, TO_DATE('20200210','YYYYMMDD'), TO_DATE('20200225','YYYYMMDD'), 1);
+INSERT INTO Contrat_location VALUES (3, 3, 3, 40000, 90, 1000, 1.626, TO_DATE('20200210','YYYYMMDD'), TO_DATE('20200226','YYYYMMDD'), 1);
+INSERT INTO Contrat_location VALUES (4, 4, 4, 1000, 100, 1000, 1.627, TO_DATE('20200310','YYYYMMDD'), TO_DATE('20200315','YYYYMMDD'), 2);
+
+INSERT INTO Facturation VALUES (0, true, 100, TO_DATE('20200120','YYYYMMDD'), 'credit', 0, 0);
+INSERT INTO Facturation VALUES (1, true, 200, TO_DATE('20200120','YYYYMMDD'), 'espece', 1, 0);
+INSERT INTO Facturation VALUES (2, true, 300, TO_DATE('20200225','YYYYMMDD'), 'debit', 2, 1);
+INSERT INTO Facturation VALUES (3, false, 400, TO_DATE('20200226','YYYYMMDD'), 'credit', 3, 1);
+INSERT INTO Facturation VALUES (4, false, 500, TO_DATE('20200315','YYYYMMDD'), 'credit', 4, 2);
+
+INSERT INTO Validation_finale VALUES (true, 0, 0);
+INSERT INTO Validation_finale VALUES (true, 1, 0);
+INSERT INTO Validation_finale VALUES (true, 2, 1);
+INSERT INTO Validation_finale VALUES (false, 3, 1);
+INSERT INTO Validation_finale VALUES (false, 4, 2);
+
+INSERT INTO Entretien VALUES (0, TO_DATE('20180516','YYYYMMDD'), 0, 0);
+INSERT INTO Entretien VALUES (1, TO_DATE('20190617','YYYYMMDD'), 1, 0);
+INSERT INTO Entretien VALUES (2, TO_DATE('20200115','YYYYMMDD'), 2, 0);
+INSERT INTO Entretien VALUES (3, TO_DATE('20180516','YYYYMMDD'), 3, 0);
+
+
+INSERT INTO Controle VALUES (0, TO_DATE('20200120','YYYYMMDD'), 'Aucun dégât', 10100, 60, 0, 3);
+INSERT INTO Controle VALUES (1, TO_DATE('20200120','YYYYMMDD'), 'Portière droite écorchée', 20200, 70, 1, 4);
+INSERT INTO Controle VALUES (2, TO_DATE('20200225','YYYYMMDD'), 'Aucun dégât', 30500, 60, 2, 5);
+
+INSERT INTO Reparation VALUES (1, 1, 1);
 
 -- Vues de vérification des contraintes
 
