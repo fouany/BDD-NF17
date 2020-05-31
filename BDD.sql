@@ -170,8 +170,6 @@ CREATE TABLE Reparation(
     FOREIGN KEY (facturation) REFERENCES Facturation(id_facturation)
 );
 
---SQL contraintes de cardinalité pas exprimées
-
 
 -- Insertions des données
 
@@ -256,19 +254,20 @@ INSERT INTO Reparation VALUES (1, 1, 1);
 -- Vues de vérification des contraintes
 
 -- Vue à destination des administrateurs afin de vérifier qu'une agence a bien au moins 2 employés
---CREATE VIEW check_nb_employes(agence) AS
---SELECT COUNT(E.id_employe) 
---FROM Employe E, Agence A
---WHERE E.agence = A.id_agence;
+CREATE VIEW check_nb_employes AS
+SELECT COUNT(E.id_employe)
+FROM Employe E, Agence A 
+WHERE E.agence = A.id_agence;
 
+-- Vue à destination des administrateurs :
 -- Si le nombre d'agents commerciaux et techniques est égal au nombre d'employes et qu'il n'y a pas de doublon, alors les contraintes sont vérifiées
---CREATE VIEW check_id_employe() AS
---SELECT COUNT(E.id_employe) AS Nb_employes
---FROM Employe E, Agent_commercial ac, Agent_technique at
---WHERE (E.id_employe = ac.employe_commercial) OR (E.id_employe = at.employe_technique)
---UNION
---SELECT COUNT(ac.employe_commercial) AS Nb_employes_commerciaux
---FROM Agent_commercial ac;
---UNION
---SELECT COUNT(at.employe_technique) AS Nb_employes_techniques
---FROM Agent_technique at;
+CREATE VIEW check_id_employe AS
+SELECT COUNT(E.id_employe)
+FROM Employe E, Agent_commercial ac, Agent_technique at
+WHERE (E.id_employe = ac.employe_commercial) OR (E.id_employe = at.employe_technique)
+EXCEPT 
+SELECT ac.employe_commercial
+FROM Agent_commercial ac
+EXCEPT
+SELECT at.employe_technique
+FROM Agent_technique at;
