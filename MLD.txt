@@ -20,6 +20,7 @@ options : "," autorise une quelconque combinaison des options avec Taille(combin
 Agence(
 	#nom_agence : text NOT NULL,
 	nb_employes : int NOT NULL
+	adresse : text NOT NULL
 )
 Contrainte de composition : nb_emploes >= 2
 
@@ -51,7 +52,8 @@ Contraintes de l'héritage : (Employe.id_employe = Agent_commercial.employe) OR 
 
 Societe_reparation(
 	#id_societe : int,
-	nom_societe : text NOT NULL
+	nom_societe : text NOT NULL,
+	adresse : text NOT NULL
 )
 
 
