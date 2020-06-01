@@ -34,8 +34,7 @@ CREATE TABLE Options(
     id_vehicule NUMERIC NOT NULL,
     gps BOOLEAN NOT NULL,
     ac BOOLEAN NOT NULL,
-    sport BOOLEAN NOT NULL,
-    bluemotion BOOLEAN NOT NULL,
+    sport BOOLEAN NOT NULL,   bluemotion BOOLEAN NOT NULL,
     easypark BOOLEAN NOT NULL,
     FOREIGN KEY (id_vehicule) REFERENCES Vehicule(immat)
 );
@@ -52,7 +51,7 @@ CREATE TABLE Employe(
 	prenom_employe VARCHAR(30) NOT NULL,
 	age NUMERIC NOT NULL,
 	email VARCHAR(30) UNIQUE NOT NULL, -- Toutes les adresses email doivent être distinctes
-	adresse VARCHAR(100) NOT NULL,
+	adresse JSON NOT NULL,
 	agence NUMERIC NOT NULL,
 	FOREIGN KEY (agence) REFERENCES Agence(id_agence)
 );
@@ -79,7 +78,7 @@ CREATE TABLE Particulier(
 	prenom VARCHAR(30) NOT NULL,
 	age NUMERIC NOT NULL,
 	telephone NUMERIC UNIQUE NOT NULL,
-	copie_permis VARCHAR(200) NOT NULL
+	copie_permis JSON NOT NULL
 );
 
 CREATE TABLE Professionnel(
@@ -88,10 +87,10 @@ CREATE TABLE Professionnel(
 	prenom VARCHAR(30) NOT NULL,
 	age NUMERIC NOT NULL,
 	telephone NUMERIC UNIQUE NOT NULL,
-	copie_permis VARCHAR(200) NOT NULL,
+	copie_permis JSON NOT NULL,
 	num_entreprise NUMERIC UNIQUE NOT NULL,
 	nom_entreprise VARCHAR(30) NOT NULL,
-	conducteurs VARCHAR(30) NOT NULL --La liste des conducteurs est forcémment non nulle car à minima, le client sera parmis les conducteurs
+	conducteurs JSON NOT NULL --La liste des conducteurs est forcémment non nulle car à minima, le client sera parmis les conducteurs
 );
 
 CREATE TABLE Location(
@@ -189,12 +188,12 @@ INSERT INTO Options VALUES (5, true, true, true, true, true);
 
 INSERT INTO Agence VALUES (0, 'EasyRental', '150 rue Boileau 69006 Lyon');
 
-INSERT INTO Employe VALUES (0, 'Dupont', 'Michel', 45, 'michel.dupont@easyrental.com', '1 rue du Bois 69001 Lyon', 0);
-INSERT INTO Employe VALUES (1, 'Dupond', 'Thibault', 50, 'thibault.dupond@easyrental.com', '3 rue de la Charité 69002 Lyon', 0);
-INSERT INTO Employe VALUES (2, 'Dupons', 'Grégoire', 40, 'gregoire.dupons@easyrental.com', '5 rue Auguste-Comte 69002 Lyon', 0);
-INSERT INTO Employe VALUES (3, 'Martin', 'Antoine', 45, 'antoine.martin@easyrental.com', '7 rue Juliette Récamier 69001 Lyon', 0);
-INSERT INTO Employe VALUES (4, 'Durand', 'Isabelle', 35, 'isabelle.durand@easyrental.com', '9 rue Jean Moulin 69003 Lyon', 0);
-INSERT INTO Employe VALUES (5, 'Dubois', 'Sophie', 45, 'sophie.duboist@easyrental.com', '11 rue Sainte-Hélène 69005 Lyon', 0);
+INSERT INTO Employe VALUES (0, 'Dupont', 'Michel', 45, 'michel.dupont@easyrental.com', '{"numero": 1, "rue": "rue du Bois", "cp": 69001, "ville": "Lyon"}', 0);
+INSERT INTO Employe VALUES (1, 'Dupond', 'Thibault', 50, 'thibault.dupond@easyrental.com', '{"numero": 2, "rue": "rue Boileau", "cp": 69002, "ville": "Lyon"}', 0);
+INSERT INTO Employe VALUES (2, 'Dupons', 'Grégoire', 40, 'gregoire.dupons@easyrental.com', '{"numero": 3, "rue": "rue Juliette Récamier", "cp": 69003, "ville": "Lyon"}', 0);
+INSERT INTO Employe VALUES (3, 'Martin', 'Antoine', 45, 'antoine.martin@easyrental.com', '{"numero": 4, "rue": "rue Jean Moulin", "cp": 69004, "ville": "Lyon"}', 0);
+INSERT INTO Employe VALUES (4, 'Durand', 'Isabelle', 35, 'isabelle.durand@easyrental.com', '{"numero": 5, "rue": "rue de Gaulle", "cp": 69005, "ville": "Lyon"}', 0);
+INSERT INTO Employe VALUES (5, 'Dubois', 'Sophie', 45, 'sophie.duboist@easyrental.com', '{"numero": 6, "rue": "rue Ney", "cp": 69006, "ville": "Lyon"}', 0);
 
 INSERT INTO Agent_commercial VALUES (0);
 INSERT INTO Agent_commercial VALUES (1);
@@ -206,13 +205,13 @@ INSERT INTO Agent_technique VALUES (5);
 
 INSERT INTO Societe_reparation VALUES (0, 'EasyRepair', '200 rue Ney 69006 Lyon');
 
-INSERT INTO Particulier VALUES (0, 'Alice', 'Martin', 27, 0123456789, 'Permis B valide, Année obtention : 2010');
-INSERT INTO Particulier VALUES (1, 'Pauline', 'Petit', 40, 1234567890, 'Permis B valide, Année obtention : 2000');
-INSERT INTO Particulier VALUES (2, 'Stephane', 'Grand', 50, 2345678901, 'Permis B valide, Année obtention : 2005');
+INSERT INTO Particulier VALUES (0, 'Alice', 'Martin', 27, 0123456789, '{"permis": "B", "annee_obtention": 2000}');
+INSERT INTO Particulier VALUES (1, 'Pauline', 'Petit', 40, 1234567890, '{"permis": "B", "annee_obtention": 2010}');
+INSERT INTO Particulier VALUES (2, 'Stephane', 'Grand', 50, 2345678901, '{"permis": "B remorque", "annee_obtention": 1985}');
 
-INSERT INTO Professionnel VALUES (0, 'Bernard', 'Bole', 50, 3456789012, 'Permis B valide, Année obtention : 1990', '123456789', 'Entreprise1', 'Bole, Herkens');
-INSERT INTO Professionnel VALUES (1, 'Bertand', 'Zabiaux', 35, 4567890123, 'Permis B valide, Année obtention : 2001', '9876543210', 'Entreprise2', 'Zabiaux, Chapuis, Gillet');
-INSERT INTO Professionnel VALUES (2, 'Benedicte', 'Latour', 40, 5678901234, 'Permis B valide, Année obtention : 1996', '8765432109', 'Entreprise3', 'Latour');
+INSERT INTO Professionnel VALUES (0, 'Bernard', 'Bole', 50, 3456789012, '{"permis": "B", "annee_obtention": 1990}', '0123456789', 'Entreprise1', '{"conducteurs": ["Bole", "Durant"]}');
+INSERT INTO Professionnel VALUES (1, 'Bertand', 'Zabiaux', 35, 4567890123, '{"permis": "B", "annee_obtention": 2001}', '9876543210', 'Entreprise2', '{"conducteurs": ["Zabiaux", "Chapuis", "Gillet"]}');
+INSERT INTO Professionnel VALUES (2, 'Benedicte', 'Latour', 40, 5678901234, '{"permis": "B", "annee_obtention": 1996}', '8765432109', 'Entreprise3', '{"conducteurs": ["Latour"]}');
 
 INSERT INTO Location VALUES (0, 'en ligne', 0, NULL);
 INSERT INTO Location VALUES (1, 'agence', 1, NULL);
