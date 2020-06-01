@@ -23,20 +23,12 @@ CREATE TABLE Vehicule(
 	categorie VARCHAR CHECK (categorie IN ('citadine','p_berline','m_berline','g_berline','4x4 SUV','break','familiale','pickup','utilitaire')) NOT NULL,
 	modele VARCHAR(30) NOT NULL,
 	carburant VARCHAR CHECK (carburant IN ('SP95', 'SP98', 'Diesel', 'Electrique', 'Ecocarburant')) NOT NULL,
+	options JSON NOT NULL,
 	etat VARCHAR(200) NOT NULL, -- L'état doit être qualifié par au moins un adjectif
 	km_parcourus DECIMAL NOT NULL,
 	nv_carburant INT NOT NULL, -- Niveau en pourcentage
 	anciennete NUMERIC CHECK (anciennete >= 0 AND anciennete <= 9) NOT NULL,
 	freq_entretien NUMERIC NOT NULL -- Fréquence d'entretien en mois
-);
-
-CREATE TABLE Options(
-    id_vehicule NUMERIC NOT NULL,
-    gps BOOLEAN NOT NULL,
-    ac BOOLEAN NOT NULL,
-    sport BOOLEAN NOT NULL,   bluemotion BOOLEAN NOT NULL,
-    easypark BOOLEAN NOT NULL,
-    FOREIGN KEY (id_vehicule) REFERENCES Vehicule(immat)
 );
 
 CREATE TABLE Agence(	
@@ -172,19 +164,12 @@ CREATE TABLE Reparation(
 
 -- Insertions des données
 
-INSERT INTO Vehicule VALUES (0, 'Peugeot', 'citadine', '206', 'SP95', 'Bon état', 10000, '50', '0', '12');
-INSERT INTO Vehicule VALUES (1, 'Renault', '4x4 SUV', 'Kadjar', 'SP98', 'Mauvais état', 20000, '60', '5', '6');
-INSERT INTO Vehicule VALUES (2, 'Citroen', 'citadine', 'C3', 'SP95', 'Bon état', 30000, '100', '3', '12');
-INSERT INTO Vehicule VALUES (3, 'Mercedes-Benz', 'citadine', 'Classe A', 'Ecocarburant', 'Bon état', 40000, '80', '2', '12');
-INSERT INTO Vehicule VALUES (4, 'Audi', 'familiale', 'A6', 'SP95', 'Bon état', 50000, '90', '3', '24');
-INSERT INTO Vehicule VALUES (5, 'Tesla', 'familiale', 'Tesla-3', 'Electrique', 'Bon état', 1000, '100', '4', '18');
-
-INSERT INTO Options VALUES (0, true, true, false, false, false);
-INSERT INTO Options VALUES (1, true, true, false, false, false);
-INSERT INTO Options VALUES (2, true, false, false, false, false);
-INSERT INTO Options VALUES (3, true, true, false, true, true);
-INSERT INTO Options VALUES (4, true, true, true, true, false);
-INSERT INTO Options VALUES (5, true, true, true, true, true);
+INSERT INTO Vehicule VALUES (0, 'Peugeot', 'citadine', '206', 'SP95', '{"gps": true, "ac": true, "sport": false, "bluemotion": false, "easypark": false}', 'Bon état', 10000, '50', '0', '12');
+INSERT INTO Vehicule VALUES (1, 'Renault', '4x4 SUV', 'Kadjar', 'SP98', '{"gps": true, "ac": true, "sport": false, "bluemotion": false, "easypark": false}', 'Mauvais état', 20000, '60', '5', '6');
+INSERT INTO Vehicule VALUES (2, 'Citroen', 'citadine', 'C3', 'SP95', '{"gps": false, "ac": true, "sport": false, "bluemotion": false, "easypark": false}', 'Bon état', 30000, '100', '3', '12');
+INSERT INTO Vehicule VALUES (3, 'Mercedes-Benz', 'citadine', 'Classe A', 'Ecocarburant', '{"gps": true, "ac": true, "sport": true, "bluemotion": true, "easypark": true}', 'Bon état', 40000, '80', '2', '12');
+INSERT INTO Vehicule VALUES (4, 'Audi', 'familiale', 'A6', 'SP95', '{"gps": true, "ac": true, "sport": false, "bluemotion": true, "easypark": true}', 'Bon état', 50000, '90', '3', '24');
+INSERT INTO Vehicule VALUES (5, 'Tesla', 'familiale', 'Tesla-3', 'Electrique', '{"gps": true, "ac": true, "sport": true, "bluemotion": true, "easypark": true}', 'Bon état', 1000, '100', '4', '18');
 
 INSERT INTO Agence VALUES (0, 'EasyRental', '150 rue Boileau 69006 Lyon');
 
