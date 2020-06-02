@@ -228,7 +228,6 @@ INSERT INTO Entretien VALUES (1, TO_DATE('20190617','YYYYMMDD'), 1, 0);
 INSERT INTO Entretien VALUES (2, TO_DATE('20200115','YYYYMMDD'), 2, 0);
 INSERT INTO Entretien VALUES (3, TO_DATE('20180516','YYYYMMDD'), 3, 0);
 
-
 INSERT INTO Controle VALUES (0, TO_DATE('20200120','YYYYMMDD'), 'Aucun dégât', 10100, 60, 0, 3);
 INSERT INTO Controle VALUES (1, TO_DATE('20200120','YYYYMMDD'), 'Portière droite écorchée', 20200, 70, 1, 4);
 INSERT INTO Controle VALUES (2, TO_DATE('20200225','YYYYMMDD'), 'Aucun dégât', 30500, 60, 2, 5);
@@ -246,12 +245,7 @@ WHERE E.agence = A.id_agence;
 -- Vue à destination des administrateurs :
 -- Si le nombre d'agents commerciaux et techniques est égal au nombre d'employes et qu'il n'y a pas de doublon, alors les contraintes sont vérifiées
 CREATE VIEW check_id_employe AS
-SELECT COUNT(E.id_employe)
+SELECT E.id_employe
 FROM Employe E, Agent_commercial ac, Agent_technique at
-WHERE (E.id_employe = ac.employe_commercial) OR (E.id_employe = at.employe_technique)
-EXCEPT 
-SELECT ac.employe_commercial
-FROM Agent_commercial ac
-EXCEPT
-SELECT at.employe_technique
-FROM Agent_technique at;
+WHERE (E.id_employe = ac.employe_commercial AND E.id_employe != at.employe_technique) OR (E.id_employe != ac.employe_commercial AND E.id_employe = at.employe_technique)
+GROUP BY E.id_employe;
