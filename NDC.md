@@ -47,7 +47,7 @@
 * Une société de réparation peut effectuer plusieurs réparations et plusieurs entretiens
 * Une réparation est effectuée par une seule société de réparation
 * Un entretien est effectué par une seule société de réparation et concerne un unique véhicule
-* Un client est soit un particulier, soit un professionnel : Se traduit par un héritage par les classes filles particulier et professionnel pour pouvoir différencier les actions que les filles peuvent faire
+* Un client est soit un particulier, soit un professionnel : Se traduit par un héritage par les classes filles particulier et professionnel pour pouvoir différencier les actions que les filles peuvent faire, mais rassembler les attributs communs au sein d'un même objet.
 * Un particulier peut ajouter, modifier, valider une seule location et une location peut être ajoutée, modifiée, validée par plusieurs particuliers
 * Un professionnel peut ajouter, modifier, valider plusieurs locations et une location peut être ajoutée, modifiée, validée par plusieurs professionnels
 
