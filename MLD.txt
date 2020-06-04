@@ -1,3 +1,10 @@
+Normalisation : 
+Forme normale 1NF : Tous les attributs sont atomiques, donc nous sommes en 1NF.
+Forme normale 2NF : Toutes les clés sont atomiques et nous sommes en 1NF, donc nous sommes en 2NF.
+Forme normale 3NF : Tous les attributs non clé ne dépendent pas d'un autre attribut non clé. La majorité des attributs sont déterminés par la clé primaire de la table. 
+Sachant cela et que nous sommes en 2NF, nous sommes donc en 3NF.
+
+
 Vehicule (
 	#immat : int(10),
 	marque : text NOT NULL,
