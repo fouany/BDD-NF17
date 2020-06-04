@@ -24,19 +24,26 @@
 * Une agence est composée d'au moins 2 employés : Se traduit par une relation de composition car la durée de vie de l'agence dépend du nombre d'employés
 * Un employé est soit un agent commercial, soit un agent technique : Se traduit par une un héritage par référence depuis les classes filles vers la classe mère Employe car les filles ont les mêmes attributs mais des actions différentes
 * Un agent technique gère le processus de contrôle (incluant l'entretien) mais un contrôle n'est lié qu'à un agent technique
-* Une location est composée d'un contrat de location et un cont
+  --> Association permettant de tracer de manière unique l'historique des techniciens gérant les processus
 *  Agent commercial :
 	* Un agent commercial peut éditer plusieurs facturations mais une facturation est éditée par un agent commercial
 	* Un agent commercial peut gérer plusieurs validations finales mais une validation finale est gérée par un seul agent commercial
 	* Un agent commercial peut gérer plusieurs contrats de location mais un contrat de location est géré par un seul agent commercial
+	  	  --> Ces trois associations permettent de tracer de manière unique l'historique les actions d'un agent commmercial et de les associer à l'action réalisée
+
 * Contrat de location
 	* Un contrat de location est associé à une ou plusieurs factures mais une facture est associée à un seul contrat
 	* Un contrat de location est associé à un seul véhicule à la fois mais un véhicule peut être associé à plusieurs contrats (non simultanément)
 	* Un contrat de location donne suite à une validation finale et une validation finale est associée à un contrat de location
+	  	  --> Ces trois associations permettent de faire le lien entre les différents objets, donc d'accéder à l'information d'un objet à un autre également pour des raisons d'historique et de traçabilité en cas de conflits ou simplement de management. 
+              En associant les données, on pourra avoir l'ensemble des informations mais en gardant une structure au sein de différents objets.
+
 * Contrôle
 	* Un contrôle peut donner lieu a une facture  s'il y a des dégâts impliquant des réparations ou aucune facture
 	* Un contrôle peut vérifier un et un seul contrat de location et un contrat de location est contrôlé une fois
 	* Un contrôle peut donner suite à une réparation ou aucune réparation et une réparation est associée à un seul contrôle
+		  	  --> Ces trois associations permettent de faire le lien entre les différents objets, donc d'accéder à l'information d'un objet à un autre également pour des raisons d'historique et de traçabilité en cas de conflits ou simplement de management. 
+              En associant les données, on pourra avoir l'ensemble des informations mais en gardant une structure au sein de différents objets.
 * Une société de réparation peut effectuer plusieurs réparations et plusieurs entretiens
 * Une réparation est effectuée par une seule société de réparation
 * Un entretien est effectué par une seule société de réparation et concerne un unique véhicule
