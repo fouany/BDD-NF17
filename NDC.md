@@ -43,7 +43,7 @@
 * Un professionnel peut ajouter, modifier, valider plusieurs locations et une location peut être ajoutée, modifiée, validée par plusieurs professionnels
 
 ## Vues
-* Liste des véhicules disponibles avec toutes les attributs du véhicule : Requêtes sur la table véhicule et contrat de location
+* Liste des véhicules disponibles avec tous les attributs du véhicule : Requêtes sur la table véhicule et contrat de location
 * Bilans financiers: 
 	* Recettes produites par véhicule : Requêtes sur la table véhicule, contrat de location et entretien
 	* Recettes produites par client : Requêtes sur les tables client particuliers (ou client professionnel) et facturation
