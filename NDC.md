@@ -4,7 +4,8 @@
 * Agence : identifiant (clé primaire) nom de l'agence, nombre d'employés
 * Employe : identifiant de l'employé (clé primaire), nom, prénom, âge, email, adresse
 * Agent technique : hérite des attributs de "Employe", référence à l'identifiant d'employé (clé primaire)
-* Agent commercial : hérite des attributs de "Employe"référence à l'identifiant d'employé (clé primaire)
+* Agent commercial : hérite des attributs de "Employe", référence à l'identifiant d'employé (clé primaire)
+  On fait cet héritage pour rassembler les attributs (identiques) des employés, mais pour différencier leurs actions
 * Controle : identifiant du contrôle (clé primaire), date de fin de location, degats de fin de location, kilomètres parcourus en fin de location, niveau de carburant en fin de location
 * Facturation : identifiant de facturation (clé primaire), payee ou non payee, montant, date, moyen de règlement (espèce, carte de crédit, carte de débit), clé étrangère vers le contrat de location, clé étrangère vers l'agent commecial qui s'en occupe
 * Societe de réparation : identifiant de la société (clé primaire), nom de la société
@@ -12,15 +13,16 @@
 * Vehicule : numéro d'immatriculation (clé primaire), marque, type (citadine, p_berline, m_berline, g_berline, 4x4 SUV, break, familiale, pickup, utilitaire), modèle, carburant (SP, SP95, SP98, Diesel, Electrique, Ecocarburant), options (gps, ac, sport, bluemotion, easypark), état, kilomètres parcourus, niveau du carburant, indice d'anncienneté (entre 0 et 9), fréquence d'entretien en semaines
 * Entretien : identifiant de l'entretien (clé primaire), date de réalisation de l'entretien, clé étrangère vers le véhicule, clé étrangère vers la société de réparation, clé étrangère vers le contrat de location, clé étrangère vers l'agent technique associé
 * Client : identifiant du client (clé primaire), nom du client, prénom, adresse, âge, téléphone, copie du permis
-* Particulier : hérite des attributs de "Client"
-* Professionnel : hérite des attributs de "Client", nom de l'entreprise, identifiant de l'entreprise, liste des conducteurs (de type Client)
+* Particulier : hérite des attributs de "Client" sans attribut en plus car il n'a pas de propriétés en plus
+* Professionnel : hérite des attributs de "Client", mais aussi nom de l'entreprise, identifiant de l'entreprise, liste des conducteurs. Le client professionnel est effectivement un client type mais avec davantage de renseignements.
+  On fait cet héritage pour éviter les doublons de champs dans les tables client et professionnel et pour différencier les actions (différentes) d'un client particulier et professionnel
 * Location : identifiant de location (clé primaire), moyen de réalisation de la location (en ligne, téléphone, agence), clé étrangère au client particulier ou professionnel qui a fait la location
 * Contrat de location : identifiant de la location (clé primaire), dégâts apparents en début de location, kilomètres parcourus en début de location, niveau de carburant en début de location, seuil de kilométrage, prix du carburant après le seuil, date de début du contrat, date prévue de fin du contrat, clé étrangère vers la location, clé étrangère vers le véhicule, clé étrangère vers l'agent commercial
 * Validation finale : est effectuée par un agent commercial
 
 ## Liste des contraintes associées à ces objets 
 * Une agence est composée d'au moins 2 employés : Se traduit par une relation de composition car la durée de vie de l'agence dépend du nombre d'employés
-* Un employé est soit un agent commercial, soit un agent technique : Se traduit par une un héritage par classe référence depuis les classes filles vers la classe mère Employe car les filles ont les mêmes attributs mais des actions différentes
+* Un employé est soit un agent commercial, soit un agent technique : Se traduit par une un héritage par référence depuis les classes filles vers la classe mère Employe car les filles ont les mêmes attributs mais des actions différentes
 * Un agent technique gère le processus de contrôle (incluant l'entretien) mais un contrôle n'est lié qu'à un agent technique
 * Une location est composée d'un contrat de location et un cont
 *  Agent commercial :
