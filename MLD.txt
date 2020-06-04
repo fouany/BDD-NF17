@@ -164,3 +164,14 @@ Reparation(
 	nb_jours_immobilisation : int
 	
 )
+
+Vues :
+ - Vérification des contraintes
+        Agence composée au moins de 2 employés
+        Le nombre d'employés doit correspondre exactement au nombre d'employés commerciaux ou techniques, et l'identifiant employé est soit commercial ou technique
+ - Liste des véhicules disponibles avec tous les attributs du véhicule
+ - Bilans financiers:
+        Recettes produites par véhicule
+        Recettes produites par client 
+        Recettes produites par catégorie de véhicule 
+ - Liste de l'ensemble des opérations (location, facture, contrôle, validation finale, procesus d'entretien) effectuées par un agent commercial ou technique 
