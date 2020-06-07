@@ -269,6 +269,8 @@ GRANT SELECT ON vue_recettes_vehicule TO un_agent_commercial, un_agent_technique
 GRANT SELECT ON vue_recettes_categorie_vehicule TO un_agent_commercial, un_agent_technique;
 GRANT SELECT ON vue_actions_agent_commercial TO un_agent_commercial, un_agent_technique;
 GRANT SELECT ON vue_actions_agent_technique TO un_agent_commercial, un_agent_technique;
+GRANT SELECT ON vue_recettes_client_particulier TO un_agent_commercial, un_agent_technique;
+GRANT SELECT ON vue_recettes_client_professionnel TO un_agent_commercial, un_agent_technique;
 
 
 -- Vues de vérification des contraintes
@@ -298,19 +300,37 @@ WHERE NOW() > cl.date_fin_prevue;
 
 -- Vue des recettes produites par véhicule
 CREATE VIEW vue_recettes_vehicule AS
-SELECT v.immat, v.marque, v.categorie, v.modele, SUM(f.montant) AS Recette FROM Vehicule v
+SELECT v.marque, v.categorie, v.modele, SUM(f.montant) AS Recette FROM Vehicule v
 INNER JOIN Contrat_location cl ON cl.vehicule = v.immat
 INNER JOIN Facturation f ON f.contrat_location = cl.id_contrat
-GROUP BY v.immat, f.id_facturation
-ORDER BY f.montant;
+GROUP BY v.marque, v.categorie, v.modele
+ORDER BY SUM(f.montant);
 
 -- Vue des recettes produites par catégorie de véhicule
 CREATE VIEW vue_recettes_categorie_vehicule AS
-SELECT v.immat, v.marque, v.categorie, v.modele, SUM(f.montant) AS Recette FROM Vehicule v
+SELECT  v.categorie, SUM(f.montant) AS Recette FROM Vehicule v
 INNER JOIN Contrat_location cl ON cl.vehicule = v.immat
 INNER JOIN Facturation f ON f.contrat_location = cl.id_contrat
-GROUP BY v.categorie, v.immat, f.montant
-ORDER BY f.montant;
+GROUP BY v.categorie
+ORDER BY SUM(f.montant);
+
+-- Vue des recettes produites par client particulier
+CREATE VIEW vue_recettes_client_particulier AS
+SELECT p.id_particulier, SUM(f.montant) AS Recette FROM Particulier p
+INNER JOIN Location l ON l.client_particulier = p.id_particulier
+INNER JOIN Contrat_location cl ON cl.location = l.id_location
+INNER JOIN Facturation f ON f.contrat_location = cl.id_contrat
+GROUP BY p.id_particulier
+ORDER BY SUM(f.montant);
+
+-- Vue des recettes produites par client particulier
+CREATE VIEW vue_recettes_client_professionnel AS
+SELECT p.id_professionnel, SUM(f.montant) AS Recette FROM Professionnel p
+INNER JOIN Location l ON l.client_professionnel = p.id_professionnel
+INNER JOIN Contrat_location cl ON cl.location = l.id_location
+INNER JOIN Facturation f ON f.contrat_location = cl.id_contrat
+GROUP BY p.id_professionnel
+ORDER BY SUM(f.montant);
 
 -- Vue des actions réalisées par un agent_commercial
 CREATE VIEW vue_actions_agent_commercial AS
