@@ -234,17 +234,53 @@ INSERT INTO Controle VALUES (2, TO_DATE('20200225','YYYYMMDD'), 'Aucun dégât',
 
 INSERT INTO Reparation VALUES (1, 1, 1);
 
+
+
+-- Gestion de droits
+/*
+CREATE USER un_agent_commercial;
+CREATE USER un_agent_technique;
+CREATE User un_client;
+
+GRANT ALL PRIVILEGES ON Contrat_location TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Validation_finale TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Facturation TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Location TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Vehicule TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Agence TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Employe TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Agent_technique TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Agent_commercial TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Location TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Particulier TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Professionnel TO un_agent_commercial;
+
+GRANT ALL PRIVILEGES ON Controle TO un_agent_technique;
+GRANT ALL PRIVILEGES ON Societe_reparation TO un_agent_technique;
+GRANT ALL PRIVILEGES ON Reparation TO un_agent_technique;
+GRANT ALL PRIVILEGES ON Entretien TO un_agent_technique;
+
+GRANT ALL PRIVILEGES ON Location TO un_client;
+
+GRANT SELECT ON Vehicule TO un_agent_technique;
+
+GRANT SELECT ON vcheck_nb_employes TO un_agent_commercial;
+GRANT SELECT ON v_check_id_employe TO un_agent_commercial;
+*/
+
+
+
 -- Vues de vérification des contraintes
 
 -- Vue à destination des administrateurs afin de vérifier qu'une agence a bien au moins 2 employés
-CREATE VIEW check_nb_employes AS
+CREATE VIEW vcheck_nb_employes AS
 SELECT COUNT(E.id_employe)
 FROM Employe E, Agence A 
 WHERE E.agence = A.id_agence;
 
 -- Vue à destination des administrateurs :
 -- Si le nombre d'agents commerciaux et techniques est égal au nombre d'employes et qu'il n'y a pas de doublon, alors les contraintes sont vérifiées
-CREATE VIEW check_id_employe AS
+CREATE VIEW vcheck_id_employe AS
 SELECT E.id_employe
 FROM Employe E, Agent_commercial ac, Agent_technique at
 WHERE (E.id_employe = ac.employe_commercial AND E.id_employe != at.employe_technique) OR (E.id_employe != ac.employe_commercial AND E.id_employe = at.employe_technique)
