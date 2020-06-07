@@ -235,7 +235,7 @@ INSERT INTO Reparation VALUES (1, 1, 1);
 
 
 -- Gestion de droits
-/*
+
 CREATE USER un_agent_commercial;
 CREATE USER un_agent_technique;
 CREATE User un_client;
@@ -266,8 +266,6 @@ GRANT SELECT ON vue_check_nb_employes TO un_agent_commercial;
 GRANT SELECT ON vue_check_id_employe TO un_agent_commercial;
 GRANT SELECT ON vue_vehicules_disponibles TO un_agent_commercial, un_agent_technique;
 GRANT SELECT ON vue_recettes_vehicule TO un_agent_commercial, un_agent_technique;
-*/
-
 
 
 -- Vues de vérification des contraintes
