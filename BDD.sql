@@ -119,9 +119,7 @@ CREATE TABLE Facturation(
 	date DATE,
 	moyen_reglement VARCHAR CHECK (moyen_reglement IN ('espece', 'credit', 'debit')) NOT NULL,
 	contrat_location NUMERIC NOT NULL,
-	agent_commercial NUMERIC NOT NULL,
-	FOREIGN KEY (contrat_location) REFERENCES Contrat_location(id_contrat),
-	FOREIGN KEY (agent_commercial) REFERENCES Agent_commercial(employe_commercial)
+	FOREIGN KEY (contrat_location) REFERENCES Contrat_location(id_contrat)
 );
 
 CREATE TABLE Validation_finale(
@@ -209,13 +207,13 @@ INSERT INTO Contrat_location VALUES (0, 0, 0, 10000, 50, 500, 1.623, TO_DATE('20
 INSERT INTO Contrat_location VALUES (1, 1, 1, 20000, 60, 500, 1.624, TO_DATE('20200111','YYYYMMDD'), TO_DATE('20200120','YYYYMMDD'), 0);
 INSERT INTO Contrat_location VALUES (2, 2, 2, 30000, 100, 1000, 1.625, TO_DATE('20200210','YYYYMMDD'), TO_DATE('20200225','YYYYMMDD'), 1);
 INSERT INTO Contrat_location VALUES (3, 3, 3, 40000, 90, 1000, 1.626, TO_DATE('20200210','YYYYMMDD'), TO_DATE('20200226','YYYYMMDD'), 1);
-INSERT INTO Contrat_location VALUES (4, 4, 4, 1000, 100, 1000, 1.627, TO_DATE('20200310','YYYYMMDD'), TO_DATE('20200315','YYYYMMDD'), 2);
+INSERT INTO Contrat_location VALUES (4, 4, 4, 1000, 100, 1000, 1.627, TO_DATE('20200310','YYYYMMDD'), TO_DATE('20200715','YYYYMMDD'), 2);
 
-INSERT INTO Facturation VALUES (0, true, 100, TO_DATE('20200120','YYYYMMDD'), 'credit', 0, 0);
-INSERT INTO Facturation VALUES (1, true, 200, TO_DATE('20200120','YYYYMMDD'), 'espece', 1, 0);
-INSERT INTO Facturation VALUES (2, true, 300, TO_DATE('20200225','YYYYMMDD'), 'debit', 2, 1);
-INSERT INTO Facturation VALUES (3, false, 400, TO_DATE('20200226','YYYYMMDD'), 'credit', 3, 1);
-INSERT INTO Facturation VALUES (4, false, 500, TO_DATE('20200315','YYYYMMDD'), 'credit', 4, 2);
+INSERT INTO Facturation VALUES (0, true, 100, TO_DATE('20200120','YYYYMMDD'), 'credit', 0);
+INSERT INTO Facturation VALUES (1, true, 200, TO_DATE('20200120','YYYYMMDD'), 'espece', 1);
+INSERT INTO Facturation VALUES (2, true, 300, TO_DATE('20200225','YYYYMMDD'), 'debit', 2);
+INSERT INTO Facturation VALUES (3, false, 400, TO_DATE('20200226','YYYYMMDD'), 'credit', 3);
+INSERT INTO Facturation VALUES (4, false, 500, TO_DATE('20200315','YYYYMMDD'), 'credit', 4);
 
 INSERT INTO Validation_finale VALUES (true, 0, 0);
 INSERT INTO Validation_finale VALUES (true, 1, 0);
@@ -264,8 +262,10 @@ GRANT ALL PRIVILEGES ON Location TO un_client;
 
 GRANT SELECT ON Vehicule TO un_agent_technique;
 
-GRANT SELECT ON vcheck_nb_employes TO un_agent_commercial;
-GRANT SELECT ON v_check_id_employe TO un_agent_commercial;
+GRANT SELECT ON vue_check_nb_employes TO un_agent_commercial;
+GRANT SELECT ON vue_check_id_employe TO un_agent_commercial;
+GRANT SELECT ON vue_vehicules_disponibles TO un_agent_commercial, un_agent_technique;
+GRANT SELECT ON vue_recettes_vehicule TO un_agent_commercial, un_agent_technique;
 */
 
 
@@ -273,15 +273,53 @@ GRANT SELECT ON v_check_id_employe TO un_agent_commercial;
 -- Vues de vérification des contraintes
 
 -- Vue à destination des administrateurs afin de vérifier qu'une agence a bien au moins 2 employés
-CREATE VIEW vcheck_nb_employes AS
+CREATE VIEW vue_check_nb_employes AS
 SELECT COUNT(E.id_employe)
 FROM Employe E, Agence A 
 WHERE E.agence = A.id_agence;
 
 -- Vue à destination des administrateurs :
 -- Si le nombre d'agents commerciaux et techniques est égal au nombre d'employes et qu'il n'y a pas de doublon, alors les contraintes sont vérifiées
-CREATE VIEW vcheck_id_employe AS
+CREATE VIEW vue_check_id_employe AS
 SELECT E.id_employe
 FROM Employe E, Agent_commercial ac, Agent_technique at
 WHERE (E.id_employe = ac.employe_commercial AND E.id_employe != at.employe_technique) OR (E.id_employe != ac.employe_commercial AND E.id_employe = at.employe_technique)
 GROUP BY E.id_employe;
+
+
+-- Vues pour les besoins de l'agence
+
+-- Vue des véhicules disponibles
+CREATE VIEW vue_vehicules_disponibles AS
+SELECT * FROM Vehicule v
+INNER JOIN Contrat_location cl ON cl.vehicule = v.immat
+WHERE NOW() > cl.date_fin_prevue;
+
+-- Vue des recettes produites par véhicule
+CREATE VIEW vue_recettes_vehicule AS
+SELECT v.immat, v.marque, v.categorie, v.modele, SUM(f.montant) AS Recette FROM Vehicule v
+INNER JOIN Contrat_location cl ON cl.vehicule = v.immat
+INNER JOIN Facturation f ON f.contrat_location = cl.id_contrat
+GROUP BY v.immat, f.id_facturation
+ORDER BY f.montant;
+
+-- Vue des recettes produites par catégorie de véhicule
+CREATE VIEW vue_recettes_categorie_vehicule AS
+SELECT v.immat, v.marque, v.categorie, v.modele, SUM(f.montant) AS Recette FROM Vehicule v
+INNER JOIN Contrat_location cl ON cl.vehicule = v.immat
+INNER JOIN Facturation f ON f.contrat_location = cl.id_contrat
+GROUP BY v.categorie, v.immat, f.montant
+ORDER BY f.montant;
+
+-- Vue des actions réalisées par un agent_commercial
+CREATE VIEW vue_actions_agent_commercial AS
+SELECT e.id_employe, e.nom_employe, e.prenom_employe, cl.id_contrat FROM Agent_commercial ac
+INNER JOIN Contrat_location cl ON cl.agent_commercial = ac.employe_commercial
+INNER JOIN Employe e ON e.id_employe = ac.employe_commercial;
+
+-- Vue des actions réalisées par un agent_technique
+CREATE VIEW vue_actions_agent_technique AS
+SELECT e.id_employe, e.nom_employe, e.prenom_employe, c.id_controle FROM Agent_technique at
+INNER JOIN Controle c ON c.agent_technique = at.employe_technique
+INNER JOIN Employe e ON e.id_employe =at.employe_technique;
+
