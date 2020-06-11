@@ -351,10 +351,8 @@ INNER JOIN Contrat_location cl ON cl.vehicule = v.immat
 WHERE NOW() > cl.date_fin_prevue AND v.options->>'sport' LIKE 'true';
 
 --Vue des clients professionnels ayant plus de 5 années de conduite et n'étant pas en cours de location (on suppose que ceux-ci sont particulièrement intéressant pour l'agence)
-CREATE VIEW vue_clients_3emearr_lyon AS
+CREATE VIEW vue_clients_pro_experimentes AS
 SELECT * FROM Professionnel pro
 INNER JOIN Location l ON l.client_professionnel = pro.id_professionnel
 INNER JOIN Contrat_location cl ON cl.id_contrat = l.id_location
 WHERE NOW() > cl.date_fin_prevue AND CAST(pro.copie_permis->>'annee_obtention' AS INTEGER) < 2015;
-
--- TODO contraintes de dates
