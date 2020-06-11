@@ -234,43 +234,43 @@ INSERT INTO Reparation VALUES (1, 1, 1);
 
 
 
--- Gestion de droits
+--Gestion de droits
 
--- CREATE USER un_agent_commercial;
--- CREATE USER un_agent_technique;
--- CREATE User un_client;
+CREATE USER un_agent_commercial;
+CREATE USER un_agent_technique;
+CREATE User un_client;
 
--- GRANT ALL PRIVILEGES ON Contrat_location TO un_agent_commercial;
--- GRANT ALL PRIVILEGES ON Validation_finale TO un_agent_commercial;
--- GRANT ALL PRIVILEGES ON Facturation TO un_agent_commercial;
--- GRANT ALL PRIVILEGES ON Location TO un_agent_commercial;
--- GRANT ALL PRIVILEGES ON Vehicule TO un_agent_commercial;
--- GRANT ALL PRIVILEGES ON Agence TO un_agent_commercial;
--- GRANT ALL PRIVILEGES ON Employe TO un_agent_commercial;
--- GRANT ALL PRIVILEGES ON Agent_technique TO un_agent_commercial;
--- GRANT ALL PRIVILEGES ON Agent_commercial TO un_agent_commercial;
--- GRANT ALL PRIVILEGES ON Location TO un_agent_commercial;
--- GRANT ALL PRIVILEGES ON Particulier TO un_agent_commercial;
--- GRANT ALL PRIVILEGES ON Professionnel TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Contrat_location TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Validation_finale TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Facturation TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Location TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Vehicule TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Agence TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Employe TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Agent_technique TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Agent_commercial TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Location TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Particulier TO un_agent_commercial;
+GRANT ALL PRIVILEGES ON Professionnel TO un_agent_commercial;
 
--- GRANT ALL PRIVILEGES ON Controle TO un_agent_technique;
--- GRANT ALL PRIVILEGES ON Societe_reparation TO un_agent_technique;
--- GRANT ALL PRIVILEGES ON Reparation TO un_agent_technique;
--- GRANT ALL PRIVILEGES ON Entretien TO un_agent_technique;
+GRANT ALL PRIVILEGES ON Controle TO un_agent_technique;
+GRANT ALL PRIVILEGES ON Societe_reparation TO un_agent_technique;
+GRANT ALL PRIVILEGES ON Reparation TO un_agent_technique;
+GRANT ALL PRIVILEGES ON Entretien TO un_agent_technique;
 
--- GRANT ALL PRIVILEGES ON Location TO un_client;
+GRANT ALL PRIVILEGES ON Location TO un_client;
 
--- GRANT SELECT ON Vehicule TO un_agent_technique;
+GRANT SELECT ON Vehicule TO un_agent_technique;
 
--- GRANT SELECT ON vue_check_nb_employes TO un_agent_commercial;
--- GRANT SELECT ON vue_check_id_employe TO un_agent_commercial;
--- GRANT SELECT ON vue_vehicules_disponibles TO un_agent_commercial, un_agent_technique;
--- GRANT SELECT ON vue_recettes_vehicule TO un_agent_commercial, un_agent_technique;
--- GRANT SELECT ON vue_recettes_categorie_vehicule TO un_agent_commercial, un_agent_technique;
--- GRANT SELECT ON vue_actions_agent_commercial TO un_agent_commercial, un_agent_technique;
--- GRANT SELECT ON vue_actions_agent_technique TO un_agent_commercial, un_agent_technique;
--- GRANT SELECT ON vue_recettes_client_particulier TO un_agent_commercial, un_agent_technique;
--- GRANT SELECT ON vue_recettes_client_professionnel TO un_agent_commercial, un_agent_technique;
+GRANT SELECT ON vue_check_nb_employes TO un_agent_commercial;
+GRANT SELECT ON vue_check_id_employe TO un_agent_commercial;
+GRANT SELECT ON vue_vehicules_disponibles TO un_agent_commercial, un_agent_technique;
+GRANT SELECT ON vue_recettes_vehicule TO un_agent_commercial, un_agent_technique;
+GRANT SELECT ON vue_recettes_categorie_vehicule TO un_agent_commercial, un_agent_technique;
+GRANT SELECT ON vue_actions_agent_commercial TO un_agent_commercial, un_agent_technique;
+GRANT SELECT ON vue_actions_agent_technique TO un_agent_commercial, un_agent_technique;
+GRANT SELECT ON vue_recettes_client_particulier TO un_agent_commercial, un_agent_technique;
+GRANT SELECT ON vue_recettes_client_professionnel TO un_agent_commercial, un_agent_technique;
 
 
 -- Vues de vérification des contraintes
