@@ -350,15 +350,11 @@ SELECT * FROM Vehicule v
 INNER JOIN Contrat_location cl ON cl.vehicule = v.immat
 WHERE NOW() > cl.date_fin_prevue AND v.options->>'sport' LIKE 'true';
 
---Vue des clients professionnels habitant dans le 3eme arrondissement de lyon ayant déjà eu un contrat de location terminé (on suppose que ceux-ci sont particulièrement intéressant pour l'agence)
+--Vue des clients professionnels ayant plus de 5 années de conduite et n'étant pas en cours de location (on suppose que ceux-ci sont particulièrement intéressant pour l'agence)
 CREATE VIEW vue_clients_3emearr_lyon AS
 SELECT * FROM Professionnel pro
 INNER JOIN Location l ON l.client_professionnel = pro.id_professionnel
 INNER JOIN Contrat_location cl ON cl.id_contrat = l.id_location
-WHERE NOW() > cl.date_fin_prevue AND (pro.copie_permis->>'anne_obtention')::int < 2015;
-
-CREATE VIEW vue_test AS
-SELECT * FROM Professionnel pro
-WHERE (pro.copie_permis->>'anne_obtention')::int < 2015;
+WHERE NOW() > cl.date_fin_prevue AND CAST(pro.copie_permis->>'annee_obtention' AS INTEGER) < 2015;
 
 -- TODO contraintes de dates
