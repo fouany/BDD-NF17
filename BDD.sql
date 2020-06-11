@@ -346,13 +346,19 @@ INNER JOIN Employe e ON e.id_employe =at.employe_technique;
 
 --Vue des véhicules option sport disponibles
 CREATE VIEW vue_vehicules_sport_disponibles AS
---SELECT * FROM Vehicule v
---INNER JOIN Contrat_location cl ON cl.vehicule = v.immat
---WHERE NOW() > cl.date_fin_prevue;
---SELECT v.modele, options->>'sport' FROM Vehicule v, JSON_ARRAY_ELEMENTS(v.options) options;
-Select options->>'sport'
-from Vehicule v, json_array_elements(v.options->'options') options;
---where options->>'sport' = 'true';
+SELECT * FROM Vehicule v
+INNER JOIN Contrat_location cl ON cl.vehicule = v.immat
+WHERE NOW() > cl.date_fin_prevue AND v.options->>'sport' LIKE 'true';
 
+--Vue des clients professionnels habitant dans le 3eme arrondissement de lyon ayant déjà eu un contrat de location terminé (on suppose que ceux-ci sont particulièrement intéressant pour l'agence)
+CREATE VIEW vue_clients_3emearr_lyon AS
+SELECT * FROM Professionnel pro
+INNER JOIN Location l ON l.client_professionnel = pro.id_professionnel
+INNER JOIN Contrat_location cl ON cl.id_contrat = l.id_location
+WHERE NOW() > cl.date_fin_prevue AND (pro.copie_permis->>'anne_obtention')::int < 2015;
 
+CREATE VIEW vue_test AS
+SELECT * FROM Professionnel pro
+WHERE (pro.copie_permis->>'anne_obtention')::int < 2015;
 
+-- TODO contraintes de dates
